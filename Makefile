@@ -1,5 +1,40 @@
 .DEFAULT_GOAL := help
 
+.PHONY: build
+build: ## Compilar TypeScript
+	npx tsc
+
+.PHONY: dev
+dev: ## Compilar en watch mode
+	npx tsc --watch
+
+.PHONY: test
+test: ## Correr tests
+	npx vitest run
+
+.PHONY: test-watch
+test-watch: ## Correr tests en watch mode
+	npx vitest
+
+.PHONY: lint
+lint: ## Lint
+	npx eslint src/
+
+.PHONY: lint-fix
+lint-fix: ## Lint + fix
+	npx eslint src/ --fix
+
+.PHONY: format
+format: ## Format con prettier
+	npx prettier --write 'src/**/*.ts'
+
+.PHONY: format-check
+format-check: ## Verificar formato
+	npx prettier --check 'src/**/*.ts'
+
+.PHONY: check
+check: lint format-check build test ## Validacion completa
+
 .PHONY: status
 status: ## Mostrar estado actual
 	@cat STATUS.md
@@ -7,10 +42,6 @@ status: ## Mostrar estado actual
 .PHONY: plan
 plan: ## Mostrar indice del plan
 	@cat PLAN.md
-
-.PHONY: check
-check: ## Validacion rapida (TODO: Fase 0.3)
-	@echo "TODO: Configurar en Fase 0.3"
 
 .PHONY: commit
 commit: ## Commit (make commit m="tipo(scope): msg")

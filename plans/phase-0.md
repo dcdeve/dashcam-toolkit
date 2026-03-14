@@ -21,7 +21,7 @@ Scaffold como proyecto Node.js + TS puro (Electron se agrega en Fase 3).
 - **Input:** docs/architecture.md
 - **Output:** Proyecto TS funcional (compila, estructura de directorios creada)
 - **Criterio de done:** `make build` compila, `npx dashcam --help` responde
-- **Estado:** [ ]
+- **Estado:** [x]
 
 ### Paso 0.3: Skills y MCPs
 - **Requiere:** 0.1, 0.2

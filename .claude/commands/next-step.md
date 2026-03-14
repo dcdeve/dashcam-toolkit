@@ -6,6 +6,14 @@ description: "Cargar contexto y ejecutar siguiente etapa del pipeline"
 2. Lee sub-plan indicado
 3. Carga SOLO archivos en "Contexto necesario"
 
+Si etapa = CORRECCION:
+- Leer "Correcciones pendientes" de STATUS.md
+- Mostrar la lista al usuario
+- Resolver cada correccion una por una
+- Despues de corregir todas: `make commit m="fix(phase-N): correcciones del validador"`
+- Reportar: "Correcciones resueltas. Corre /new-phase para re-validar."
+- NO avanzar de fase automaticamente -- el validador debe correr de nuevo
+
 Si es INICIO DE PASO (etapa = DISENAR), evaluar pipeline adaptativo:
 
 ```
