@@ -1,0 +1,13 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write",
+        "hooks": [{
+          "type": "command",
+          "command": "echo 'Actualiza STATUS.md si cambiaste de etapa'"
+        }]
+      }
+    ]
+  }
+}

@@ -1,0 +1,14 @@
+# claude-pw - session state (personal)
+STATUS.md
+
+# Claude Code - config local
+.claude/settings.local.json
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editors
+*.swp
+*.swo
+*~

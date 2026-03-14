@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+set -e
+
+echo "Pre-commit..."
+
+echo "  -> Lint..."
+make lint || { echo "  x Lint FALLO"; exit 1; }
+
+echo "  -> Format..."
+make format-check || { echo "  x Format FALLO"; exit 1; }
+
+echo "  -> Types..."
+make typecheck || { echo "  x Typecheck FALLO"; exit 1; }
+
+echo "  -> Tests..."
+make test || { echo "  x Tests FALLARON"; exit 1; }
+
+if [ -d "tests/contracts" ] && [ "$(ls -A tests/contracts 2>/dev/null)" ]; then
+  echo "  -> Contracts..."
+  make test-contracts || { echo "  x Contracts FALLARON"; exit 1; }
+fi
+
+echo "Pre-commit OK"
