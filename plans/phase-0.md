@@ -28,7 +28,7 @@ Scaffold como proyecto Node.js + TS puro (Electron se agrega en Fase 3).
 - **Input:** docs/architecture.md, stack definido, modulos identificados
 - **Output:** Lista de skills/MCPs instalados, docs/tooling.md con justificacion
 - **Criterio de done:** Skills/MCPs instalados y verificados funcionando
-- **Estado:** [ ]
+- **Estado:** [x]
 - **Notas:** Evaluar SQLite MCP, filesystem tools. Solo lo que tenga uso claro.
 
 ### Paso 0.4: Makefile + toolchain + changelog

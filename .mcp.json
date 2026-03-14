@@ -1,0 +1,19 @@
+{
+  "mcpServers": {
+    "sqlite": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "mcp-server-sqlite-npx",
+        "/home/dani/.dashcam-toolkit/dashcam.db"
+      ]
+    },
+    "context7": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@upstash/context7-mcp"
+      ]
+    }
+  }
+}
