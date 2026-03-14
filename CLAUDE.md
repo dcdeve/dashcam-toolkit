@@ -1,8 +1,7 @@
 # dashcam-toolkit
 
 ## Stack
-Node.js + TypeScript, SQLite (better-sqlite3 + Drizzle), ffmpeg-static + spawn,
-date-fns, Vitest, electron-log. CLI-first, Electron en Fase 3.
+TODO: Fase 0
 
 ## Reglas
 - Leer STATUS.md antes de cualquier cosa
@@ -16,6 +15,9 @@ date-fns, Vitest, electron-log. CLI-first, Electron en Fase 3.
 - Si hay incertidumbre tecnica -> SPIKE (explorar y descartar codigo)
 - NUNCA git commit --no-verify
 - Decisiones grandes -> /impact -> context reset
+- Tareas ad-hoc que no afectan el plan -> /quick
+- Debug que puede tomar varias sesiones -> /debug (persiste estado)
+- Si algo parece roto o inconsistente -> /health
 
 ## Estructura
 - STATUS.md -- Puntero. Leer primero.
@@ -23,3 +25,4 @@ date-fns, Vitest, electron-log. CLI-first, Electron en Fase 3.
 - plans/ -- Sub-planes (solo fase actual)
 - plans/decisions.md -- Decisiones y RFC
 - src/interfaces/ -- Contratos (RFC para modificar)
+- .planning/ -- Estado local (gitignored): quick tasks, debug sessions

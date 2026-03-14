@@ -38,6 +38,8 @@ Hace preguntas organizadas por area. MAXIMO 3-4 preguntas por turno.
 **Ronda 6 -- Contexto de desarrollo:**
 - Trabajas solo o en equipo?
 - Repo existente o nuevo?
+  - Si es existente con codigo: recomendar `/map-codebase` antes o durante Fase 0
+  - Si ya se corrio /map-codebase: leer docs/architecture.md, docs/codebase-map.md, etc. e incorporar a la sintesis
 - Prioridad: velocidad de entrega vs robustez?
 
 Si el usuario no sabe la respuesta a algo, esta bien. Marcalo como "decision pendiente para Fase 0" y segui.
@@ -69,6 +71,15 @@ Produci un resumen estructurado:
 ```
 
 Presentalo al usuario. NO avances sin aprobacion.
+
+## 3.5 AUTO-RESEARCH (si aplica)
+Revisar la sintesis. Para cada item en "Pendiente para Fase 0" y decisiones tecnicas inciertas:
+- Si es "que libreria/framework usar" -> delegar al agente researcher (tipo: library)
+- Si es "es viable este approach" -> delegar al agente researcher (tipo: feasibility)
+- Si es preferencia/decision de negocio -> skip (necesita humano)
+
+Guardar resultados en docs/research/. Presentar resumenes junto con la sintesis.
+Si no hay nada que investigar, skip esta seccion.
 
 ## 4. GENERACION DEL PLAN
 Una vez aprobada la sintesis, genera:
