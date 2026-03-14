@@ -2,9 +2,16 @@
 description: "Cargar contexto y ejecutar siguiente etapa del pipeline"
 ---
 
-1. Lee STATUS.md -> fase, paso, etapa
-2. Lee sub-plan indicado
-3. Carga SOLO archivos en "Contexto necesario"
+## 0. Health check (inicio de sesion)
+Delegar al agente session-recovery.
+- Si LIMPIO: continuar.
+- Si RECUPERABLE: mostrar al usuario las acciones sugeridas. Esperar aprobacion. Ejecutar correcciones. Luego continuar.
+- Si INCONSISTENTE: mostrar diagnostico. NO continuar sin que el usuario decida.
+
+## 1. Cargar contexto
+- Lee STATUS.md -> fase, paso, etapa
+- Lee sub-plan indicado
+- Carga SOLO archivos en "Contexto necesario"
 
 Si etapa = CORRECCION:
 - Leer "Correcciones pendientes" de STATUS.md
