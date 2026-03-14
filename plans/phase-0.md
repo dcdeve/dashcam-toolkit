@@ -2,6 +2,7 @@
 
 ## Objetivo
 Definir tecnologias, estructura, toolchain, y setup del entorno de desarrollo.
+Scaffold como proyecto Node.js + TS puro (Electron se agrega en Fase 3).
 
 ## Contexto requerido
 - PLAN.md
@@ -13,13 +14,13 @@ Definir tecnologias, estructura, toolchain, y setup del entorno de desarrollo.
 - **Input:** Plan maestro del usuario
 - **Output:** docs/architecture.md completo
 - **Criterio de done:** Documento aprobado con stack, estructura, y decisiones
-- **Estado:** [ ]
+- **Estado:** [x]
 
-### Paso 0.2: Scaffold Electron + TS + React
+### Paso 0.2: Scaffold Node.js + TS
 - **Requiere:** 0.1
 - **Input:** docs/architecture.md
-- **Output:** Proyecto Electron funcional (ventana vacia, build OK)
-- **Criterio de done:** `make dev` abre ventana, `make build` genera binario
+- **Output:** Proyecto TS funcional (compila, estructura de directorios creada)
+- **Criterio de done:** `make build` compila, `npx dashcam --help` responde
 - **Estado:** [ ]
 
 ### Paso 0.3: Skills y MCPs
@@ -53,6 +54,7 @@ Definir tecnologias, estructura, toolchain, y setup del entorno de desarrollo.
 
 ## Gate
 - [ ] `make check` pasa
-- [ ] `make dev` abre ventana Electron
+- [ ] `make build` compila
+- [ ] `npx dashcam --help` responde
 - [ ] Pre-commit bloquea commits rotos
 - [ ] Claude Code tooling funcional

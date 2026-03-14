@@ -3,34 +3,100 @@
 ## Stack
 | Componente | Tecnologia |
 |-----------|-----------|
-| Framework | Electron + TypeScript |
-| Frontend | React + TypeScript |
-| DB | SQLite (better-sqlite3) |
-| FFmpeg (MVP) | @ffmpeg-installer/ffmpeg |
+| Runtime | Node.js + TypeScript |
+| Framework UI | Electron + React + TypeScript |
+| DB | SQLite (better-sqlite3 + Drizzle ORM) |
+| FFmpeg (MVP) | ffmpeg-static |
 | FFmpeg (prod) | Auto-download por OS/arch al primer uso |
+| FFmpeg wrapper | child_process.spawn directo (sin fluent-ffmpeg) |
 | Tokens de fecha | date-fns (format/parse) |
+| CLI framework | Commander.js v14 + @commander-js/extra-typings |
+| Progress multi-fase | listr2 |
+| Progress numerico | cli-progress |
+| Build tooling | electron-vite (dev) + electron-builder (dist) |
+| Test runner | Vitest |
+| Logger | electron-log v5 (via /node en CLI, nativo en Electron) |
 | Distribucion MVP | Script de terminal, sin certificados |
 | Distribucion futura | Installers nativos firmados |
 
-## Estructura del proceso
+## Arquitectura de capas
 
 ```
-┌──────────────────────────────────────────────────────────┐
-│  Renderer (React)                                         │
-│  Pages: Library | Player | Export | Settings               │
-│  Components: TripCard, ClipGrid, VideoPlayer, SeekBar,    │
-│              ViewToggle, ImportDialog, StatusBadge          │
-├──────────────────────────────────────────────────────────┤
-│  IPC (invoke/handle)                                       │
-├──────────────────────────────────────────────────────────┤
-│  Main Process (Node.js)                                    │
-│  Modules: ffmpeg | scanner | patterns | trips | exporter  │
-│           | thumbnails | db | monitor | ipc                │
-├──────────────────────────────────────────────────────────┤
-│  FFmpeg/FFprobe (sidecar) — spawn per operation            │
-├──────────────────────────────────────────────────────────┤
-│  SQLite (better-sqlite3) — ~/.dashcam-toolkit/data.db      │
-└──────────────────────────────────────────────────────────┘
+┌─────────────────────────────────────────────────────────┐
+│  Renderer (React)                                        │
+│  Pages: Library | Player | Export | Settings              │
+├─────────────────────────────────────────────────────────┤
+│  IPC (invoke/handle)                                      │
+├─────────────────────────────────────────────────────────┤
+│  Electron Main Process                                    │
+│  (thin wrapper: IPC handlers → core)                      │
+├──────────────────┬──────────────────────────────────────┤
+│  CLI (terminal)  │                                        │
+│  Commands: scan, │  ← ambos consumen el mismo core        │
+│  export, info... │                                        │
+├──────────────────┴──────────────────────────────────────┤
+│  Core (puro Node.js)                                      │
+│  Modules: db | ffmpeg | scanner | patterns | trips        │
+│           | exporter | thumbnails | monitor               │
+├─────────────────────────────────────────────────────────┤
+│  FFmpeg/FFprobe (sidecar) — spawn per operation           │
+├─────────────────────────────────────────────────────────┤
+│  SQLite (better-sqlite3 + Drizzle) — ~/.dashcam-toolkit/  │
+└─────────────────────────────────────────────────────────┘
+```
+
+## Estructura de directorios
+
+```
+src/
+  core/           # Puro Node.js — sin dependencias de Electron
+    modules/      # db, ffmpeg, scanner, patterns, trips, exporter, thumbnails, monitor
+    migrations/   # SQL files (001_initial.sql, ...)
+  cli/            # Interfaz terminal
+    commands/     # scan, export, info, patterns, trips, config
+    index.ts      # Entry point CLI
+  electron/       # Main process Electron
+    ipc/          # Handlers IPC → core
+    index.ts      # Entry point main
+    preload.ts    # Preload script
+  renderer/       # React app
+    pages/        # Library, Player, Export, Settings
+    components/   # UI components
+    hooks/        # Custom hooks
+    App.tsx
+    main.tsx      # Entry point renderer
+  shared/         # Tipos compartidos (core, CLI, y renderer)
+    types/
+    constants/
+tests/
+  unit/           # Tests unitarios por modulo
+  contracts/      # Tests de contrato (interfaces)
+  e2e/            # Tests end-to-end
+```
+
+## CLI
+
+```
+dashcam scan <dir>                    # Escanea, auto-detect pattern, agrupa trips, guarda en DB
+dashcam scan <dir> --rescan           # Re-escanea (actualiza nuevos/removidos)
+dashcam scan <dir> --pattern <name>   # Forzar pattern (skip auto-detect)
+dashcam scan <dir> --gap <minutes>    # Override gap de agrupacion (default 5)
+
+dashcam export <trip-id...>           # Exportar uno o varios trips
+dashcam export <file...>              # Exportar uno o varios clips directos
+dashcam export <trip-id> --range 00:05:00-00:15:00  # Rango temporal
+dashcam export --dir <dir>            # Exportar todo lo escaneado
+dashcam export ... --output <path>    # Destino custom
+dashcam export ... --reencode         # Forzar re-encode (default: lossless)
+dashcam export ... --preset <name>    # alta/media/baja
+
+dashcam info <file...>                # Probe detallado (codecs, resolucion, duracion, pattern)
+dashcam patterns                      # Lista builtin + custom patterns
+dashcam patterns add <name> <format>  # Agregar pattern custom
+dashcam trips                         # Lista trips en DB
+dashcam trips show <trip-id>          # Detalle de un trip con sus clips
+dashcam config                        # Mostrar config actual
+dashcam config set <key> <value>      # Cambiar setting
 ```
 
 ## Modelo de datos (SQLite)
@@ -81,9 +147,6 @@ settings        → config persistente (export_dir, gap_minutes, export_template
 | Performance con 5000+ clips | Virtualizacion, lazy thumbnails, probe en batches |
 | Formatos GPS propietarios | Priorizar top 10 fabricantes, parser extensible |
 
-## Pendiente para Fase 0
-- Confirmar set de ~10 builtin patterns (fabricantes especificos)
-- Definir estructura exacta de migrations
-- Elegir test runner (vitest vs jest)
-- Definir estrategia de logging
-- Evaluar si electron-forge o electron-builder desde el scaffold
+## Pendiente para Fase 1+
+- Confirmar set de ~10 builtin patterns con clips reales (Fase 2)
+- Definir estructura exacta de migrations (Fase 1)

@@ -1,7 +1,8 @@
 # dashcam-toolkit
 
 ## Stack
-Electron + React + TypeScript, SQLite (better-sqlite3), FFmpeg sidecar, date-fns
+Node.js + TypeScript, SQLite (better-sqlite3 + Drizzle), ffmpeg-static + spawn,
+date-fns, Vitest, electron-log. CLI-first, Electron en Fase 3.
 
 ## Reglas
 - Leer STATUS.md antes de cualquier cosa
