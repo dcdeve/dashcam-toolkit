@@ -32,7 +32,7 @@ Electron como shell visual sobre el core ya validado por CLI.
 - **Input:** DB + thumbnails
 - **Output:** Grid/lista con toggle, thumbnails, ordenable por columnas
 - **Criterio de done:** Vista funcional con datos reales
-- **Estado:** [ ]
+- **Estado:** [x]
 
 ### Paso 3.5: Library — Viajes tab
 - **Input:** Trips + thumbnails
