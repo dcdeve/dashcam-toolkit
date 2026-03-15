@@ -2,7 +2,7 @@
 
 ## Ahora
 - **Fase:** 3 — Electron + UI
-- **Paso:** 3.8
+- **Paso:** 3.9
 - **Etapa:** DISENAR
 - **Sub-plan:** plans/phase-3.md
 

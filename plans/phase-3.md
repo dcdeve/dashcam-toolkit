@@ -56,7 +56,7 @@ Electron como shell visual sobre el core ya validado por CLI.
 - **Input:** Trip con clips
 - **Output:** Dual video swap, seek bar global, clip N/total, timestamp
 - **Criterio de done:** Swap gap <100ms
-- **Estado:** [ ]
+- **Estado:** [x]
 
 ### Paso 3.9: Export flow
 - **Input:** Exporter + UI
