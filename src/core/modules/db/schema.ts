@@ -48,13 +48,18 @@ export const clips = sqliteTable(
 
 export const thumbnails = sqliteTable('thumbnails', {
   id: text('id').primaryKey(),
-  clipId: text('clip_id')
-    .notNull()
-    .references(() => clips.id),
+  clipId: text('clip_id').references(() => clips.id),
+  tripId: text('trip_id').references(() => trips.id),
   path: text('path').notNull(),
+  type: text('type', { enum: ['clip', 'scrub'] })
+    .notNull()
+    .default('clip'),
   timestampMs: integer('timestamp_ms').notNull(),
   width: integer('width').notNull(),
   height: integer('height').notNull(),
+  createdAt: integer('created_at')
+    .notNull()
+    .$defaultFn(() => Date.now()),
 });
 
 export const settings = sqliteTable('settings', {

@@ -5,6 +5,7 @@ import { registerClipsHandlers } from './clips.js';
 import { registerTripsHandlers } from './trips.js';
 import { registerPatternsHandlers } from './patterns.js';
 import { registerExporterHandlers } from './exporter.js';
+import { registerThumbnailsHandlers } from './thumbnails.js';
 
 export function registerAllHandlers(): void {
   registerDialogHandlers();
@@ -14,4 +15,5 @@ export function registerAllHandlers(): void {
   registerTripsHandlers();
   registerPatternsHandlers();
   registerExporterHandlers();
+  registerThumbnailsHandlers();
 }

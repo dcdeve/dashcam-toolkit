@@ -5,6 +5,7 @@ import { mkdirSync } from 'fs';
 
 import { VERSION } from '../core/index.js';
 import { db } from '../core/modules/db/index.js';
+import { configureThumbnails } from '../core/modules/thumbnails/index.js';
 import { registerAllHandlers } from './ipc/index.js';
 
 function getDbPath(): string {
@@ -52,6 +53,10 @@ app.whenReady().then(async () => {
   db.connect({ path: dbPath });
   db.migrate();
   console.log(`Database ready: ${dbPath}`);
+
+  // Configure thumbnails cache
+  const thumbDir = join(homedir(), '.dashcam-toolkit', 'thumbnails');
+  configureThumbnails({ cacheDir: thumbDir });
 
   registerAllHandlers();
 

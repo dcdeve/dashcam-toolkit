@@ -51,6 +51,14 @@ const api = {
     export: (options: ExportOptions) => ipcRenderer.invoke(IPC.EXPORTER.EXPORT, options),
     cancel: () => ipcRenderer.invoke(IPC.EXPORTER.CANCEL),
   },
+
+  thumbnails: {
+    generate: (clipId: number) => ipcRenderer.invoke(IPC.THUMBNAILS.GENERATE, clipId),
+    generateScrub: (tripId: number) => ipcRenderer.invoke(IPC.THUMBNAILS.GENERATE_SCRUB, tripId),
+    get: (clipId: number) => ipcRenderer.invoke(IPC.THUMBNAILS.GET, clipId),
+    getScrub: (tripId: number) => ipcRenderer.invoke(IPC.THUMBNAILS.GET_SCRUB, tripId),
+    clearCache: () => ipcRenderer.invoke(IPC.THUMBNAILS.CLEAR_CACHE),
+  },
 };
 
 contextBridge.exposeInMainWorld('api', api);

@@ -31,4 +31,11 @@ export const IPC = {
     EXPORT: 'exporter:export',
     CANCEL: 'exporter:cancel',
   },
+  THUMBNAILS: {
+    GENERATE: 'thumbnails:generate',
+    GENERATE_SCRUB: 'thumbnails:generateScrub',
+    GET: 'thumbnails:get',
+    GET_SCRUB: 'thumbnails:getScrub',
+    CLEAR_CACHE: 'thumbnails:clearCache',
+  },
 } as const;
