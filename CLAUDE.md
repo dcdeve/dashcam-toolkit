@@ -23,13 +23,18 @@
 - Pipeline adaptativo: evaluar que etapas aplican al inicio del paso
 - Etapas obligatorias: DISENAR, ACEPTACION, CIERRE
 - Si hay incertidumbre tecnica -> SPIKE (explorar y descartar codigo)
+- Decisiones arquitectonicas grandes -> investigar a fondo antes de proponer (alternativas, trade-offs, comunidad)
 - NUNCA git commit --no-verify
 - Decisiones grandes -> /impact -> context reset
 - Tareas ad-hoc que no afectan el plan -> /quick
 - Debug que puede tomar varias sesiones -> /debug (persiste estado)
 - Si algo parece roto o inconsistente -> /health
+- Antes de construir una fase -> /discuss (capturar preferencias, resolver ambiguedades)
+- Ideas o tareas para despues -> /todos (capturar y revisar)
+- Pausar sesion -> /pause (genera handoff para retomar)
 - Si el usuario te corrige, captura la correccion en .planning/learnings/queue.md
 - Al final de sesiones largas, sugerir /reflect para procesar aprendizajes
+- Si .planning/config.json existe, respetar configuracion (autoAdvance, granularity, modelProfile)
 
 ## Estructura
 - STATUS.md -- Puntero. Leer primero.
