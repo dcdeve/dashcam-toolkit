@@ -17,6 +17,9 @@
 | 13 | 0.1 | CLI-first, Electron despues | Electron desde el inicio | Core puro Node.js testeable sin Electron. CLI util por si sola | Arquitectura | 2026-03-14 |
 | 14 | 0.1-spike | Commander.js v14 | yargs, citty | 238M dl/sem, 0 deps, battle-tested. citty v0.2 riesgoso para dev solo | CLI framework | 2026-03-14 |
 | 15 | 0.1-spike | listr2 + cli-progress | ora, progress | listr2 para multi-fase, cli-progress para % FFmpeg. Complementarios | Progress UI | 2026-03-14 |
+| 16 | 3.1 | src/main/ + src/preload/ (convencion electron-vite) | src/electron/ (custom) | Zero config, alineado con comunidad Electron, docs/ejemplos aplican directo. Custom paths no aportan valor real | Estructura | 2026-03-15 |
+| 17 | 3.1 | Monolito con separacion logica | Monorepo multi-package | Dev solo, overhead de monorepo no justificado. Boundaries por carpeta permiten split futuro si crece comunidad | Arquitectura | 2026-03-15 |
+| 18 | 3.1 | vitest@3.2 (downgrade de 4.1) | vitest@4 + legacy-peer-deps | electron-vite@5 requiere vite <=7, vitest@4 usa vite@8. Downgrade limpio sin breaking changes | Testing | 2026-03-15 |
 
 | 16 | 1 | Lock de interfaces: cambios a src/interfaces/ requieren RFC previo | — | Proceso | 2026-03-15 |
 

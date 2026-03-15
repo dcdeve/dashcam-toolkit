@@ -14,7 +14,7 @@ Electron como shell visual sobre el core ya validado por CLI.
 - **Input:** Proyecto Node.js existente
 - **Output:** Electron wrapping el core, ventana vacia, build OK
 - **Criterio de done:** `make dev` abre ventana, core accesible desde main process
-- **Estado:** [ ]
+- **Estado:** [x]
 
 ### Paso 3.2: IPC bridge + preload + tipos compartidos
 - **Input:** Interfaces de ipc

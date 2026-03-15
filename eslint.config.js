@@ -7,7 +7,7 @@ export default tseslint.config(
   {
     languageOptions: {
       parserOptions: {
-        projectService: true,
+        project: ['./tsconfig.json', './tsconfig.node.json', './tsconfig.web.json'],
         tsconfigRootDir: import.meta.dirname,
       },
     },
@@ -17,6 +17,6 @@ export default tseslint.config(
     },
   },
   {
-    ignores: ['dist/', 'node_modules/', '*.config.js'],
+    ignores: ['dist/', 'out/', 'node_modules/', '*.config.js', '*.config.ts'],
   },
 );

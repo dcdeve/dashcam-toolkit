@@ -55,10 +55,11 @@ src/
   cli/            # Interfaz terminal
     commands/     # scan, export, info, patterns, trips, config
     index.ts      # Entry point CLI
-  electron/       # Main process Electron
+  main/           # Main process Electron (convencion electron-vite)
     ipc/          # Handlers IPC → core
     index.ts      # Entry point main
-    preload.ts    # Preload script
+  preload/        # Preload script (convencion electron-vite)
+    index.ts      # Context bridge
   renderer/       # React app
     pages/        # Library, Player, Export, Settings
     components/   # UI components

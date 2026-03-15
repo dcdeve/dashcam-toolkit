@@ -1,11 +1,19 @@
 .DEFAULT_GOAL := help
 
 .PHONY: build
-build: ## Compilar TypeScript
+build: ## Compilar TypeScript (core + CLI)
 	npx tsc
 
+.PHONY: build-electron
+build-electron: ## Compilar Electron app
+	npx electron-vite build
+
 .PHONY: dev
-dev: ## Compilar en watch mode
+dev: ## Abrir Electron en dev mode
+	npx electron-vite dev
+
+.PHONY: dev-cli
+dev-cli: ## Compilar CLI en watch mode
 	npx tsc --watch
 
 .PHONY: test
@@ -26,11 +34,11 @@ lint-fix: ## Lint + fix
 
 .PHONY: format
 format: ## Format con prettier
-	npx prettier --write 'src/**/*.ts'
+	npx prettier --write 'src/**/*.{ts,tsx}'
 
 .PHONY: format-check
 format-check: ## Verificar formato
-	npx prettier --check 'src/**/*.ts'
+	npx prettier --check 'src/**/*.{ts,tsx}'
 
 .PHONY: typecheck
 typecheck: ## Verificar tipos sin emitir
@@ -48,8 +56,8 @@ test-e2e: ## Correr tests end-to-end
 check: lint format-check build test ## Validacion completa
 
 .PHONY: clean
-clean: ## Borrar dist/
-	rm -rf dist/
+clean: ## Borrar dist/ y out/
+	rm -rf dist/ out/
 
 .PHONY: changelog
 changelog: ## Generar CHANGELOG.md desde commits
