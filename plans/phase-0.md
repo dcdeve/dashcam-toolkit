@@ -53,8 +53,8 @@ Scaffold como proyecto Node.js + TS puro (Electron se agrega en Fase 3).
 - **Estado:** [x]
 
 ## Gate
-- [ ] `make check` pasa
-- [ ] `make build` compila
-- [ ] `npx dashcam --help` responde
-- [ ] Pre-commit bloquea commits rotos
-- [ ] Claude Code tooling funcional
+- [x] `make check` pasa
+- [x] `make build` compila
+- [x] `npx dashcam --help` responde
+- [x] Pre-commit bloquea commits rotos
+- [x] Claude Code tooling funcional
