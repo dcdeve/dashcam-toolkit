@@ -80,4 +80,4 @@ Electron como shell visual sobre el core ya validado por CLI.
 - [ ] Workflow completo import→browse→preview→export funcional
 - [ ] Hover scrub <50ms, swap gap <100ms
 - [ ] Settings persistidos
-- [ ] `make build` genera app funcional
+- [ ] `make build-electron` genera app funcional, `make start` la abre

@@ -1,5 +1,12 @@
 .DEFAULT_GOAL := help
 
+.PHONY: setup
+setup: ## Instalar deps, rebuild native, compilar todo
+	npm install
+	npx electron-rebuild -f -w better-sqlite3
+	npx tsc
+	npx electron-vite build
+
 .PHONY: build
 build: ## Compilar TypeScript (core + CLI)
 	npx tsc
@@ -16,6 +23,14 @@ dev: ## Abrir Electron en dev mode
 .PHONY: dev-cli
 dev-cli: ## Compilar CLI en watch mode
 	npx tsc --watch
+
+.PHONY: start
+start: ## Abrir Electron app compilada (produccion local)
+	npx electron .
+
+.PHONY: cli
+cli: ## Correr CLI compilado (make cli args="scan /ruta")
+	node dist/cli/index.js $(args)
 
 .PHONY: test
 test: ## Correr tests
