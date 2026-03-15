@@ -14,7 +14,7 @@ Orientado a robustez: tipos estrictos, error types, y tests de contrato.
 - **Input:** Requerimientos + architecture.md
 - **Output:** Lista en docs/interfaces.md
 - **Criterio de done:** Modulos con nombre, responsabilidad, boundaries
-- **Estado:** [ ]
+- **Estado:** [x]
 
 ### Paso 1.2: Interfaces publicas
 - **Requiere:** 1.1
