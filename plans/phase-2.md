@@ -14,7 +14,7 @@ CLI funcional como primera interfaz de usuario.
 - **Input:** Interfaces de db
 - **Output:** Modulo db con migrations, seed de builtin patterns
 - **Criterio de done:** Tests pasan, schema correcto
-- **Estado:** [ ]
+- **Estado:** [x]
 
 ### Paso 2.2: ffmpeg — Detectar FFmpeg + probe
 - **Input:** Interfaces de ffmpeg
