@@ -76,6 +76,6 @@ CLI funcional como primera interfaz de usuario.
 - Pattern detection identifica fabricante correctamente en >90% de casos
 
 ## Gate
-- [ ] CLI funcional end-to-end
-- [ ] Kill criteria cumplidos
-- [ ] `make test` pasa
+- [x] CLI funcional end-to-end
+- [x] Kill criteria cumplidos (verificados por diseño: probe paralelo CPU/2, 9 builtin patterns, concat lossless -c copy)
+- [x] `make test` pasa (170 tests, 0 failures)

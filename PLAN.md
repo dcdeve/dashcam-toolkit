@@ -25,7 +25,7 @@ por CLI (power users) y UI grafica (usuarios no-tecnicos).
 |---|------|----------|--------|
 | 0 | Stack y Scaffolding | plans/phase-0.md | completada |
 | 1 | Interfaces y Modulos | plans/phase-1.md | completada |
-| 2 | Core Engine + CLI | plans/phase-2.md | pendiente |
+| 2 | Core Engine + CLI | plans/phase-2.md | completada |
 | 3 | Electron + UI | plans/phase-3.md | pendiente |
 | 4 | V1 Producto Usable | plans/phase-4.md | pendiente |
 | 5 | Installer + Distribucion | plans/phase-5.md | pendiente |
