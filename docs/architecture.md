@@ -1,23 +1,24 @@
 # Arquitectura
 
 ## Stack
-| Componente | Tecnologia |
-|-----------|-----------|
-| Runtime | Node.js + TypeScript |
-| Framework UI | Electron + React + TypeScript |
-| DB | SQLite (better-sqlite3 + Drizzle ORM) |
-| FFmpeg (MVP) | ffmpeg-static |
-| FFmpeg (prod) | Auto-download por OS/arch al primer uso |
-| FFmpeg wrapper | child_process.spawn directo (sin fluent-ffmpeg) |
-| Tokens de fecha | date-fns (format/parse) |
-| CLI framework | Commander.js v14 + @commander-js/extra-typings |
-| Progress multi-fase | listr2 |
-| Progress numerico | cli-progress |
-| Build tooling | electron-vite (dev) + electron-builder (dist) |
-| Test runner | Vitest |
-| Logger | electron-log v5 (via /node en CLI, nativo en Electron) |
-| Distribucion MVP | Script de terminal, sin certificados |
-| Distribucion futura | Installers nativos firmados |
+
+| Componente          | Tecnologia                                        |
+| ------------------- | ------------------------------------------------- |
+| Runtime             | Node.js + TypeScript                              |
+| Framework UI        | Electron + React + TypeScript                     |
+| DB                  | SQLite (better-sqlite3 + Drizzle ORM)             |
+| FFmpeg (MVP)        | ffmpeg-static                                     |
+| FFmpeg (prod)       | Auto-download por OS/arch al primer uso           |
+| FFmpeg wrapper      | child_process.spawn directo (sin fluent-ffmpeg)   |
+| Tokens de fecha     | date-fns (format/parse)                           |
+| CLI framework       | Commander.js v14 + @commander-js/extra-typings    |
+| Progress multi-fase | listr2                                            |
+| Progress numerico   | cli-progress                                      |
+| Build tooling       | electron-vite (dev) + electron-builder (dist)     |
+| Test runner         | Vitest                                            |
+| Logger              | console.log (electron-log pendiente para fase 4+) |
+| Distribucion MVP    | Script de terminal, sin certificados              |
+| Distribucion futura | Installers nativos firmados                       |
 
 ## Arquitectura de capas
 
@@ -112,42 +113,43 @@ settings        → config persistente (export_dir, gap_minutes, export_template
 
 ## Decisiones de producto
 
-| Tema | Decision |
-|------|---------|
-| Archivos | In-place, no copia |
-| Persistencia | Viajes y clips en SQLite entre sesiones |
-| UI metafora | Biblioteca de medios (no file explorer) |
-| Vistas | Toggle lista/grid, preferencia persistida |
-| Naming | Pattern matching bidireccional con date-fns + ~10 builtin patterns |
-| Import patterns | Auto-detect con confirmacion del usuario |
-| Export naming | Template configurable con tokens fecha + secuencia |
-| Deteccion de viajes | Gap temporal configurable (default 5min) |
-| Preview de viaje | Dual video swap (sin concat real) |
-| Hover preview | Scrub de thumbnails estilo YouTube |
-| Player controles | Play/pause, seek bar global, clip N/total, timestamp dashcam |
-| Export destino | Directorio default, configurable en settings |
+| Tema                   | Decision                                                            |
+| ---------------------- | ------------------------------------------------------------------- |
+| Archivos               | In-place, no copia                                                  |
+| Persistencia           | Viajes y clips en SQLite entre sesiones                             |
+| UI metafora            | Biblioteca de medios (no file explorer)                             |
+| Vistas                 | Toggle lista/grid, preferencia persistida                           |
+| Naming                 | Pattern matching bidireccional con date-fns + ~10 builtin patterns  |
+| Import patterns        | Auto-detect con confirmacion del usuario                            |
+| Export naming          | Template configurable con tokens fecha + secuencia                  |
+| Deteccion de viajes    | Gap temporal configurable (default 5min)                            |
+| Preview de viaje       | Dual video swap (sin concat real)                                   |
+| Hover preview          | Scrub de thumbnails estilo YouTube                                  |
+| Player controles       | Play/pause, seek bar global, clip N/total, timestamp dashcam        |
+| Export destino         | Directorio default, configurable en settings                        |
 | Archivos desconectados | Estado gris, thumbnails cacheados visibles, acciones deshabilitadas |
 
 ## Metricas de exito
 
-| Metrica | Target |
-|---------|--------|
-| Import de 500 clips | <15 segundos |
-| Hover scrub latencia | <50ms entre thumbnails |
-| Dual video swap gap | <100ms (imperceptible) |
-| Export lossless 1h de viaje | <30 segundos |
-| RAM con biblioteca de 2000 clips | <500MB |
+| Metrica                          | Target                 |
+| -------------------------------- | ---------------------- |
+| Import de 500 clips              | <15 segundos           |
+| Hover scrub latencia             | <50ms entre thumbnails |
+| Dual video swap gap              | <100ms (imperceptible) |
+| Export lossless 1h de viaje      | <30 segundos           |
+| RAM con biblioteca de 2000 clips | <500MB                 |
 
 ## Riesgos principales
 
-| Riesgo | Mitigacion |
-|--------|-----------|
-| Codecs incompatibles para concat lossless | Detectar en probe, ofrecer re-encode |
+| Riesgo                                      | Mitigacion                                           |
+| ------------------------------------------- | ---------------------------------------------------- |
+| Codecs incompatibles para concat lossless   | Detectar en probe, ofrecer re-encode                 |
 | Timestamps inconsistentes entre fabricantes | Fallback chain: pattern → metadata → mtime → unknown |
-| Dual video swap con gap perceptible | Precargar siguiente clip con preload="auto" |
-| Performance con 5000+ clips | Virtualizacion, lazy thumbnails, probe en batches |
-| Formatos GPS propietarios | Priorizar top 10 fabricantes, parser extensible |
+| Dual video swap con gap perceptible         | Precargar siguiente clip con preload="auto"          |
+| Performance con 5000+ clips                 | Virtualizacion, lazy thumbnails, probe en batches    |
+| Formatos GPS propietarios                   | Priorizar top 10 fabricantes, parser extensible      |
 
 ## Pendiente para Fase 1+
+
 - Confirmar set de ~10 builtin patterns con clips reales (Fase 2)
 - Definir estructura exacta de migrations (Fase 1)

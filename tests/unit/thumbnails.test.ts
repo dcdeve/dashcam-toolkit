@@ -100,98 +100,38 @@ describe('[thumbnails] - ThumbnailsModule', () => {
   });
 
   it('generate creates thumbnail for clip', async () => {
-    // clipId as number — interface uses number but DB uses string IDs
-    // We use string 'clip1' stored as id, but interface expects number
-    // For now, test with a numeric-like approach
-    const drizzle = getDb();
-    drizzle
-      .insert(schema.clips)
-      .values({
-        id: '1',
-        path: '/fake/numeric.mp4',
-        durationMs: 30000,
-        codecVideo: 'h264',
-        width: 1920,
-        height: 1080,
-        fps: 30,
-        patternId: 'garmin',
-        tsSource: 2000000,
-        tripId: null,
-        fileSize: 50000,
-        createdAt: Date.now(),
-      })
-      .run();
-
-    const entry = await thumbnails.generate(1);
-    expect(entry.clipId).toBe(1);
+    const entry = await thumbnails.generate('clip1');
+    expect(entry.clipId).toBe('clip1');
     expect(entry.type).toBe('clip');
-    expect(entry.path).toContain('clip_1.jpg');
+    expect(entry.path).toContain('clip_clip1.jpg');
   });
 
   it('generate returns cached thumbnail if exists', async () => {
-    const drizzle = getDb();
-    drizzle
-      .insert(schema.clips)
-      .values({
-        id: '2',
-        path: '/fake/cached.mp4',
-        durationMs: 30000,
-        codecVideo: 'h264',
-        width: 1920,
-        height: 1080,
-        fps: 30,
-        patternId: 'garmin',
-        tsSource: 3000000,
-        tripId: null,
-        fileSize: 50000,
-        createdAt: Date.now(),
-      })
-      .run();
-
-    const first = await thumbnails.generate(2);
-    const second = await thumbnails.generate(2);
+    const first = await thumbnails.generate('clip1');
+    const second = await thumbnails.generate('clip1');
     expect(first.path).toBe(second.path);
   });
 
   it('generate throws for non-existent clip', async () => {
-    await expect(thumbnails.generate(999)).rejects.toThrow('not found');
+    await expect(thumbnails.generate('nonexistent')).rejects.toThrow('not found');
   });
 
   it('get returns null for clip without thumbnail', async () => {
-    const result = await thumbnails.get(999);
+    const result = await thumbnails.get('nonexistent');
     expect(result).toBeNull();
   });
 
   it('getScrub returns empty for trip without scrub thumbnails', async () => {
-    const result = await thumbnails.getScrub(999);
+    const result = await thumbnails.getScrub('nonexistent');
     expect(result).toEqual([]);
   });
 
   it('clearCache removes all thumbnails', async () => {
-    const drizzle = getDb();
-    drizzle
-      .insert(schema.clips)
-      .values({
-        id: '3',
-        path: '/fake/clear.mp4',
-        durationMs: 30000,
-        codecVideo: 'h264',
-        width: 1920,
-        height: 1080,
-        fps: 30,
-        patternId: 'garmin',
-        tsSource: 4000000,
-        tripId: null,
-        fileSize: 50000,
-        createdAt: Date.now(),
-      })
-      .run();
-
-    await thumbnails.generate(3);
+    await thumbnails.generate('clip1');
     const count = await thumbnails.clearCache();
     expect(count).toBeGreaterThan(0);
 
-    const after = await thumbnails.get(3);
+    const after = await thumbnails.get('clip1');
     expect(after).toBeNull();
   });
 });

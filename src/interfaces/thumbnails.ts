@@ -12,9 +12,9 @@ export interface ThumbnailConfig {
 }
 
 export interface ThumbnailEntry {
-  id: number;
-  clipId: number | null;
-  tripId: number | null;
+  id: string;
+  clipId: string | null;
+  tripId: string | null;
   path: string;
   type: ThumbnailType;
   timestampMs: number;
@@ -27,9 +27,9 @@ export type ThumbnailError =
   | 'THUMBNAIL_CACHE_FULL';
 
 export interface ThumbnailsModule {
-  generate(clipId: number): Promise<ThumbnailEntry>;
-  generateScrub(tripId: number): Promise<ThumbnailEntry[]>;
-  get(clipId: number): Promise<ThumbnailEntry | null>;
-  getScrub(tripId: number): Promise<ThumbnailEntry[]>;
+  generate(clipId: string): Promise<ThumbnailEntry>;
+  generateScrub(tripId: string): Promise<ThumbnailEntry[]>;
+  get(clipId: string): Promise<ThumbnailEntry | null>;
+  getScrub(tripId: string): Promise<ThumbnailEntry[]>;
   clearCache(): Promise<number>;
 }

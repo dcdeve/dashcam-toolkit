@@ -72,10 +72,10 @@ const api = {
   },
 
   thumbnails: {
-    generate: (clipId: number) => ipcRenderer.invoke(IPC.THUMBNAILS.GENERATE, clipId),
-    generateScrub: (tripId: number) => ipcRenderer.invoke(IPC.THUMBNAILS.GENERATE_SCRUB, tripId),
-    get: (clipId: number) => ipcRenderer.invoke(IPC.THUMBNAILS.GET, clipId),
-    getScrub: (tripId: number) => ipcRenderer.invoke(IPC.THUMBNAILS.GET_SCRUB, tripId),
+    generate: (clipId: string) => ipcRenderer.invoke(IPC.THUMBNAILS.GENERATE, clipId),
+    generateScrub: (tripId: string) => ipcRenderer.invoke(IPC.THUMBNAILS.GENERATE_SCRUB, tripId),
+    get: (clipId: string) => ipcRenderer.invoke(IPC.THUMBNAILS.GET, clipId),
+    getScrub: (tripId: string) => ipcRenderer.invoke(IPC.THUMBNAILS.GET_SCRUB, tripId),
     clearCache: () => ipcRenderer.invoke(IPC.THUMBNAILS.CLEAR_CACHE),
   },
 };

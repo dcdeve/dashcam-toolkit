@@ -46,9 +46,9 @@ async function ensureCacheDir(): Promise<void> {
 
 function dbRowToEntry(row: typeof schema.thumbnails.$inferSelect): ThumbnailEntry {
   return {
-    id: parseInt(row.id, 10) || 0,
-    clipId: row.clipId ? parseInt(row.clipId, 10) : null,
-    tripId: row.tripId ? parseInt(row.tripId, 10) : null,
+    id: row.id,
+    clipId: row.clipId,
+    tripId: row.tripId,
     path: row.path,
     type: row.type as 'clip' | 'scrub',
     timestampMs: row.timestampMs,
@@ -57,10 +57,10 @@ function dbRowToEntry(row: typeof schema.thumbnails.$inferSelect): ThumbnailEntr
 }
 
 export const thumbnails: ThumbnailsModule = {
-  async generate(clipId: number): Promise<ThumbnailEntry> {
+  async generate(clipId: string): Promise<ThumbnailEntry> {
     await ensureCacheDir();
     const db = getDb();
-    const clipIdStr = String(clipId);
+    const clipIdStr = clipId;
 
     // Check if already exists
     const existing = db
@@ -122,10 +122,10 @@ export const thumbnails: ThumbnailsModule = {
     return dbRowToEntry(inserted);
   },
 
-  async generateScrub(tripId: number): Promise<ThumbnailEntry[]> {
+  async generateScrub(tripId: string): Promise<ThumbnailEntry[]> {
     await ensureCacheDir();
     const db = getDb();
-    const tripIdStr = String(tripId);
+    const tripIdStr = tripId;
     const scrubCount = config.scrubCount ?? 30;
     const width = config.width ?? 320;
 
@@ -209,12 +209,12 @@ export const thumbnails: ThumbnailsModule = {
     return entries;
   },
 
-  async get(clipId: number): Promise<ThumbnailEntry | null> {
+  async get(clipId: string): Promise<ThumbnailEntry | null> {
     const db = getDb();
     const row = db
       .select()
       .from(schema.thumbnails)
-      .where(and(eq(schema.thumbnails.clipId, String(clipId)), eq(schema.thumbnails.type, 'clip')))
+      .where(and(eq(schema.thumbnails.clipId, clipId), eq(schema.thumbnails.type, 'clip')))
       .get();
 
     if (!row) return null;
@@ -226,12 +226,12 @@ export const thumbnails: ThumbnailsModule = {
     return dbRowToEntry(row);
   },
 
-  async getScrub(tripId: number): Promise<ThumbnailEntry[]> {
+  async getScrub(tripId: string): Promise<ThumbnailEntry[]> {
     const db = getDb();
     const rows = db
       .select()
       .from(schema.thumbnails)
-      .where(and(eq(schema.thumbnails.tripId, String(tripId)), eq(schema.thumbnails.type, 'scrub')))
+      .where(and(eq(schema.thumbnails.tripId, tripId), eq(schema.thumbnails.type, 'scrub')))
       .orderBy(schema.thumbnails.timestampMs)
       .all();
 

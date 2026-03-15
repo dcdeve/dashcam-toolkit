@@ -8,8 +8,8 @@ import type {
 
 describe('[thumbnails] - Contract', () => {
   const sampleEntry: ThumbnailEntry = {
-    id: 1,
-    clipId: 1,
+    id: 'thumb-1',
+    clipId: 'clip-1',
     tripId: null,
     path: '/cache/thumb_001.jpg',
     type: 'clip',
@@ -18,16 +18,16 @@ describe('[thumbnails] - Contract', () => {
   };
 
   const stub: ThumbnailsModule = {
-    async generate(_clipId: number) {
+    async generate(_clipId: string) {
       return sampleEntry;
     },
-    async generateScrub(_tripId: number) {
-      return [{ ...sampleEntry, type: 'scrub' as const, tripId: 1, clipId: null }];
+    async generateScrub(_tripId: string) {
+      return [{ ...sampleEntry, type: 'scrub' as const, tripId: 'trip-1', clipId: null }];
     },
-    async get(_clipId: number) {
+    async get(_clipId: string) {
       return sampleEntry;
     },
-    async getScrub(_tripId: number) {
+    async getScrub(_tripId: string) {
       return [];
     },
     async clearCache() {

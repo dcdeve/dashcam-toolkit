@@ -1,5 +1,6 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import type { Trip } from '../../interfaces/trips.js';
+import type { ThumbnailEntry } from '../../interfaces/thumbnails.js';
 
 function formatDuration(seconds: number): string {
   const h = Math.floor(seconds / 3600);
@@ -17,8 +18,6 @@ function formatDate(date: Date): string {
     minute: '2-digit',
   });
 }
-
-const SCRUB_FRAMES = 30;
 
 const cardStyle = (hovered: boolean): React.CSSProperties => ({
   backgroundColor: hovered ? '#181c25' : '#13161c',
@@ -131,6 +130,17 @@ interface TripCardProps {
 export function TripCard({ trip, onClick }: TripCardProps): React.ReactElement {
   const [scrubPos, setScrubPos] = useState<number | null>(null);
   const [hovered, setHovered] = useState(false);
+  const [scrubThumbs, setScrubThumbs] = useState<ThumbnailEntry[]>([]);
+
+  useEffect(() => {
+    let cancelled = false;
+    window.api.thumbnails.getScrub(trip.id).then((entries) => {
+      if (!cancelled) setScrubThumbs(entries);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [trip.id]);
 
   const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
     const rect = e.currentTarget.getBoundingClientRect();
@@ -143,7 +153,11 @@ export function TripCard({ trip, onClick }: TripCardProps): React.ReactElement {
     setHovered(false);
   }, []);
 
-  const frameIndex = scrubPos !== null ? Math.floor(scrubPos * (SCRUB_FRAMES - 1)) + 1 : null;
+  const frameIndex =
+    scrubPos !== null
+      ? Math.min(Math.floor(scrubPos * scrubThumbs.length), scrubThumbs.length - 1)
+      : null;
+  const scrubThumb = frameIndex !== null && frameIndex >= 0 ? scrubThumbs[frameIndex] : null;
 
   return (
     <div
@@ -153,12 +167,27 @@ export function TripCard({ trip, onClick }: TripCardProps): React.ReactElement {
       onClick={onClick}
     >
       <div style={scrubAreaStyle} onMouseMove={handleMouseMove}>
+        {scrubThumb && (
+          <img
+            src={`dashcam-file://${scrubThumb.path}`}
+            alt=""
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+              pointerEvents: 'none',
+            }}
+          />
+        )}
         <span style={clipCountBadgeStyle}>{trip.clipCount} clips</span>
-        <span style={scrubLabelStyle(scrubPos !== null)}>
-          {frameIndex !== null
-            ? `${frameIndex} / ${SCRUB_FRAMES}`
-            : formatDuration(trip.totalDuration)}
-        </span>
+        {!scrubThumb && (
+          <span style={scrubLabelStyle(scrubPos !== null)}>
+            {formatDuration(trip.totalDuration)}
+          </span>
+        )}
         {scrubPos !== null && (
           <>
             <div style={scrubIndicatorStyle} />
