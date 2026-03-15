@@ -10,6 +10,7 @@ build-electron: ## Compilar Electron app
 
 .PHONY: dev
 dev: ## Abrir Electron en dev mode
+	npx electron-rebuild -f -w better-sqlite3
 	npx electron-vite dev
 
 .PHONY: dev-cli
