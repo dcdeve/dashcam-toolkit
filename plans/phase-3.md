@@ -38,7 +38,7 @@ Electron como shell visual sobre el core ya validado por CLI.
 - **Input:** Trips + thumbnails
 - **Output:** TripCards con hover scrub / tabla ordenable
 - **Criterio de done:** Hover scrub latencia <50ms
-- **Estado:** [ ]
+- **Estado:** [x]
 
 ### Paso 3.6: Thumbnails
 - **Input:** FFmpeg + clips
