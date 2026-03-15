@@ -4,6 +4,10 @@ import { Command } from 'commander';
 import { VERSION } from '../core/index.js';
 import { scanAction } from './commands/scan.js';
 import { exportAction } from './commands/export.js';
+import { infoAction } from './commands/info.js';
+import { patternsAction } from './commands/patterns.js';
+import { tripsAction } from './commands/trips.js';
+import { configAction } from './commands/config.js';
 
 const program = new Command();
 
@@ -33,34 +37,26 @@ program
   .command('info')
   .description('Probe file(s) for codec, resolution, duration, and detected pattern')
   .argument('<files...>', 'Files to probe')
-  .action((_files) => {
-    console.log('info: not implemented yet');
-  });
+  .action(infoAction);
 
 program
   .command('patterns')
   .description('List and manage naming patterns')
   .option('--add <name>', 'Add custom pattern')
   .option('--format <format>', 'Pattern format (used with --add)')
-  .action((_opts) => {
-    console.log('patterns: not implemented yet');
-  });
+  .action(patternsAction);
 
 program
   .command('trips')
   .description('List and inspect trips')
   .argument('[trip-id]', 'Trip ID to show details')
-  .action((_tripId) => {
-    console.log('trips: not implemented yet');
-  });
+  .action(tripsAction);
 
 program
   .command('config')
   .description('View or update settings')
   .argument('[key]', 'Setting key')
   .argument('[value]', 'Setting value')
-  .action((_key, _value) => {
-    console.log('config: not implemented yet');
-  });
+  .action(configAction);
 
 program.parse();

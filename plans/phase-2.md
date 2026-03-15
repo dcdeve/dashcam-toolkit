@@ -62,7 +62,7 @@ CLI funcional como primera interfaz de usuario.
 - **Input:** Core modules + db
 - **Output:** `dashcam info`, `patterns`, `trips`, `config` funcionales
 - **Criterio de done:** Todos los comandos responden correctamente
-- **Estado:** [ ]
+- **Estado:** [x]
 
 ### Paso 2.10: Test end-to-end
 - **Input:** CLI completa
