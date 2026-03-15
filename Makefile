@@ -40,6 +40,10 @@ typecheck: ## Verificar tipos sin emitir
 test-contracts: ## Correr tests de contrato
 	npx vitest run tests/contracts/ --passWithNoTests
 
+.PHONY: test-e2e
+test-e2e: ## Correr tests end-to-end
+	npx vitest run tests/e2e/ --passWithNoTests
+
 .PHONY: check
 check: lint format-check build test ## Validacion completa
 

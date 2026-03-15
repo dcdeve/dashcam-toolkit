@@ -68,7 +68,7 @@ CLI funcional como primera interfaz de usuario.
 - **Input:** CLI completa
 - **Output:** Tests e2e con clips reales via CLI
 - **Criterio de done:** Pipeline completo scan→trips→export via CLI OK
-- **Estado:** [ ]
+- **Estado:** [x]
 
 ## Kill criteria
 - Probe de 2000 clips en <30s
