@@ -18,7 +18,15 @@
 | 14 | 0.1-spike | Commander.js v14 | yargs, citty | 238M dl/sem, 0 deps, battle-tested. citty v0.2 riesgoso para dev solo | CLI framework | 2026-03-14 |
 | 15 | 0.1-spike | listr2 + cli-progress | ora, progress | listr2 para multi-fase, cli-progress para % FFmpeg. Complementarios | Progress UI | 2026-03-14 |
 
+| 16 | 1 | Lock de interfaces: cambios a src/interfaces/ requieren RFC previo | — | Proceso | 2026-03-15 |
+
 ## RFC en Interfaces
+
+Desde Fase 1 Paso 1.5 (2026-03-15), las interfaces en `src/interfaces/` estan locked.
+Cualquier modificacion requiere:
+1. RFC en esta tabla con modulo, cambio propuesto, y justificacion
+2. Aprobacion antes de implementar
+3. Actualizar docs/interfaces.md y tests/contracts/ junto con el cambio
 
 | # | Modulo | Cambio | Estado | Fecha |
 |---|--------|--------|--------|-------|

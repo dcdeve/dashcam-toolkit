@@ -42,10 +42,10 @@ Orientado a robustez: tipos estrictos, error types, y tests de contrato.
 - **Input:** Todo
 - **Output:** Interfaces en main, RFC activo
 - **Criterio de done:** Mergeado
-- **Estado:** [ ]
+- **Estado:** [x]
 
 ## Gate
-- [ ] Interfaces compilan
-- [ ] Tests de contrato pasan
-- [ ] docs/interfaces.md completo
-- [ ] Sin dependencias circulares
+- [x] Interfaces compilan
+- [x] Tests de contrato pasan
+- [x] docs/interfaces.md completo
+- [x] Sin dependencias circulares
