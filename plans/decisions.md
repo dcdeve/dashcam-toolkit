@@ -31,3 +31,4 @@ Cualquier modificacion requiere:
 | # | Modulo | Cambio | Estado | Fecha |
 |---|--------|--------|--------|-------|
 | RFC-1 | trips | `id: number` → `id: string` en Clip, Trip, y parámetros de TripsModule. DB ya usa text UUIDs, scanner inserta con crypto.randomUUID(). Alinear interface con realidad. | aprobado | 2026-03-15 |
+| RFC-2 | exporter | `tripIds?: number[]` → `tripIds?: string[]` en ExportOptions. Extension de RFC-1 para consistencia con IDs string. | aprobado | 2026-03-15 |

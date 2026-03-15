@@ -28,7 +28,7 @@ describe('[exporter] - Contract', () => {
   });
 
   it('export returns output path', async () => {
-    const result = await stub.export({ tripIds: [1] });
+    const result = await stub.export({ tripIds: ['trip-001'] });
     expect(typeof result).toBe('string');
   });
 

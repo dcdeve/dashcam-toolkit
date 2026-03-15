@@ -9,7 +9,7 @@ export interface TimeRange {
 
 export interface ExportOptions {
   /** Trip IDs to export */
-  tripIds?: number[];
+  tripIds?: string[];
   /** Direct file paths to export */
   filePaths?: string[];
   /** Time range within the trip */

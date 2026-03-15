@@ -44,7 +44,7 @@ CLI funcional como primera interfaz de usuario.
 - **Input:** Interfaces de exporter
 - **Output:** Concat lossless + re-encode, progress via stderr
 - **Criterio de done:** Export lossless funciona con dashcams populares
-- **Estado:** [ ]
+- **Estado:** [x]
 
 ### Paso 2.7: CLI — scan command
 - **Input:** scanner + patterns + trips + db
