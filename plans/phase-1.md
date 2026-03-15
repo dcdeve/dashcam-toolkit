@@ -28,7 +28,7 @@ Orientado a robustez: tipos estrictos, error types, y tests de contrato.
 - **Input:** Interfaces
 - **Output:** Diagrama de dependencias en docs/
 - **Criterio de done:** Sin deps circulares
-- **Estado:** [ ]
+- **Estado:** [x]
 
 ### Paso 1.4: Tests de contrato
 - **Requiere:** 1.3

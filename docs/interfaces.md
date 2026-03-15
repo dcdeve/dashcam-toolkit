@@ -45,8 +45,31 @@ orquestacion: scanner, trips, thumbnails, exporter, monitor
 consumidores: cli, ipc
 ```
 
-## Diagrama
-TODO: Paso 1.3
+## Diagrama de dependencias
+
+### Interfaces (compile-time imports en src/interfaces/)
+
+```
+scanner.ts ──→ trips.ts (Clip)
+```
+
+Todos los demas archivos de interfaces son autocontenidos.
+
+### Implementacion (runtime, inyectadas)
+
+```
+db ←─── scanner ←── monitor
+│        ↑
+ffmpeg ──┤
+│        ↓
+│      exporter
+│
+patterns  trips ←── thumbnails
+```
+
+### Verificacion de ciclos
+
+Sin dependencias circulares en ninguna capa.
 
 ## Interfaces publicas (src/interfaces/)
 
