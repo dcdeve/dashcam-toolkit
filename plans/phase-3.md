@@ -74,7 +74,7 @@ Electron como shell visual sobre el core ya validado por CLI.
 - **Input:** Exporter
 - **Output:** CRF + preset como opciones legibles (Alta/Media/Baja, Rapido/Balanceado/Max)
 - **Criterio de done:** Presets aplicados correctamente en export
-- **Estado:** [ ]
+- **Estado:** [x]
 
 ## Gate
 - [ ] Workflow completo import→browse→preview→export funcional

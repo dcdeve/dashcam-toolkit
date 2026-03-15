@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import type { ExportProgress, ExportPreset } from '../../interfaces/exporter.js';
+import type { ExportProgress, ExportPreset, ExportSpeed } from '../../interfaces/exporter.js';
 import type { Trip, Clip } from '../../interfaces/trips.js';
 
 type ExportState = 'options' | 'exporting' | 'done' | 'error';
@@ -295,6 +295,7 @@ export function Export({ target, onBack }: ExportProps): React.ReactElement {
   // Options
   const [reencode, setReencode] = useState(false);
   const [preset, setPreset] = useState<ExportPreset>('medium');
+  const [speed, setSpeed] = useState<ExportSpeed>('balanced');
 
   // Progress
   const [progress, setProgress] = useState<ExportProgress | null>(null);
@@ -387,6 +388,7 @@ export function Export({ target, onBack }: ExportProps): React.ReactElement {
         filePaths: target.clipPaths,
         reencode,
         preset: reencode ? preset : undefined,
+        speed: reencode ? speed : undefined,
       });
       setOutputPath(result);
       setState('done');
@@ -399,7 +401,7 @@ export function Export({ target, onBack }: ExportProps): React.ReactElement {
         setState('error');
       }
     }
-  }, [target, reencode, preset]);
+  }, [target, reencode, preset, speed]);
 
   const handleCancel = useCallback(() => {
     window.api.exporter.cancel();
@@ -498,21 +500,38 @@ export function Export({ target, onBack }: ExportProps): React.ReactElement {
               </div>
             </div>
             {reencode && (
-              <div style={summaryRowStyle}>
-                <span style={labelStyle}>Quality</span>
-                <div style={presetGroupStyle}>
-                  {(['high', 'medium', 'low'] as ExportPreset[]).map((p) => (
-                    <button
-                      key={p}
-                      type="button"
-                      style={optionBtnStyle(preset === p)}
-                      onClick={() => setPreset(p)}
-                    >
-                      {p === 'high' ? 'High' : p === 'medium' ? 'Medium' : 'Low'}
-                    </button>
-                  ))}
+              <>
+                <div style={summaryRowStyle}>
+                  <span style={labelStyle}>Quality</span>
+                  <div style={presetGroupStyle}>
+                    {(['high', 'medium', 'low'] as ExportPreset[]).map((p) => (
+                      <button
+                        key={p}
+                        type="button"
+                        style={optionBtnStyle(preset === p)}
+                        onClick={() => setPreset(p)}
+                      >
+                        {p === 'high' ? 'High' : p === 'medium' ? 'Medium' : 'Low'}
+                      </button>
+                    ))}
+                  </div>
                 </div>
-              </div>
+                <div style={summaryRowStyle}>
+                  <span style={labelStyle}>Speed</span>
+                  <div style={presetGroupStyle}>
+                    {(['fast', 'balanced', 'max'] as ExportSpeed[]).map((s) => (
+                      <button
+                        key={s}
+                        type="button"
+                        style={optionBtnStyle(speed === s)}
+                        onClick={() => setSpeed(s)}
+                      >
+                        {s === 'fast' ? 'Fast' : s === 'balanced' ? 'Balanced' : 'Max quality'}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </>
             )}
             <div style={{ marginTop: '16px', textAlign: 'center' }}>
               <button type="button" style={exportBtnStyle(false)} onClick={handleExport}>

@@ -1,6 +1,7 @@
 // Exporter module interface
 
 export type ExportPreset = 'high' | 'medium' | 'low';
+export type ExportSpeed = 'fast' | 'balanced' | 'max';
 
 export interface TimeRange {
   startMs: number;
@@ -20,6 +21,8 @@ export interface ExportOptions {
   reencode?: boolean;
   /** Re-encode quality preset */
   preset?: ExportPreset;
+  /** Re-encode speed (affects file size and encoding time) */
+  speed?: ExportSpeed;
 }
 
 export interface ExportProgress {

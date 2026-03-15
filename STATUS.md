@@ -2,8 +2,8 @@
 
 ## Ahora
 - **Fase:** 3 — Electron + UI
-- **Paso:** 3.11
-- **Etapa:** DISENAR
+- **Paso:** 3.11 (ultimo de fase 3)
+- **Etapa:** COMPLETO
 - **Sub-plan:** plans/phase-3.md
 
 ## Contexto necesario

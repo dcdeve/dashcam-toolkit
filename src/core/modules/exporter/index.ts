@@ -11,6 +11,7 @@ import type {
   ExportTemplate,
   ExporterError,
   ExportPreset,
+  ExportSpeed,
 } from '../../../interfaces/exporter.js';
 import type { Clip } from '../../../interfaces/trips.js';
 
@@ -30,6 +31,12 @@ const PRESET_CRF: Record<ExportPreset, number> = {
   high: 18,
   medium: 23,
   low: 28,
+};
+
+const SPEED_PRESET: Record<ExportSpeed, string> = {
+  fast: 'veryfast',
+  balanced: 'medium',
+  max: 'slow',
 };
 
 const DEFAULT_TEMPLATES: ExportTemplate[] = [{ name: 'default', pattern: '{date}_{trip}_{seq}' }];
@@ -66,7 +73,8 @@ function buildFfmpegArgs(
 
   if (options.reencode) {
     const crf = PRESET_CRF[options.preset ?? 'medium'];
-    args.push('-c:v', 'libx264', '-preset', 'medium', '-crf', String(crf));
+    const ffmpegPreset = SPEED_PRESET[options.speed ?? 'balanced'];
+    args.push('-c:v', 'libx264', '-preset', ffmpegPreset, '-crf', String(crf));
     args.push('-c:a', 'aac');
   } else {
     args.push('-c', 'copy');
