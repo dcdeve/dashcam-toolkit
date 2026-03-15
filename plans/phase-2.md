@@ -32,7 +32,7 @@ CLI funcional como primera interfaz de usuario.
 - **Input:** Interfaces de scanner
 - **Output:** Scan con max depth 6, probe paralelo (CPU/2), auto-detect pattern
 - **Criterio de done:** 2000 clips en <30s
-- **Estado:** [ ]
+- **Estado:** [x]
 
 ### Paso 2.5: trips — Gap detection + agrupacion
 - **Input:** Interfaces de trips
