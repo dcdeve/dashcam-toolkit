@@ -5,7 +5,7 @@
         "matcher": "",
         "hooks": [{
           "type": "command",
-          "command": "prompt=\"$CLAUDE_USER_PROMPT\"; if echo \"$prompt\" | grep -qiE '(^no[, ]|no uses|no hagas|don.t use|actually|en realidad|mejor usa|use .+ not|instead of|en vez de|nunca |always |siempre )'; then echo \"[CORRECCION DETECTADA] Captura esta correccion en .planning/learnings/queue.md con fecha, la correccion textual, y el contexto de que estabas haciendo. Formato: nueva fila en la tabla.\"; fi"
+          "command": "prompt=\"$CLAUDE_USER_PROMPT\"; if [ ${#prompt} -gt 500 ] && ! echo \"$prompt\" | grep -qiE '(recuerda:|remember:)'; then exit 0; fi; if echo \"$prompt\" | grep -qiE '(\\?$|^(please |can you |could you |por favor |puedes |podrias |ayudame ))'; then exit 0; fi; if echo \"$prompt\" | grep -qiE '(^no[, ]|no uses|no hagas|don.t use|actually|en realidad|mejor usa|use .+ not|instead of|en vez de|nunca |always |siempre |recuerda:|remember:)'; then echo \"[CORRECCION DETECTADA] Captura esta correccion en .planning/learnings/queue.md con fecha, la correccion textual, y el contexto de que estabas haciendo. Formato: nueva fila en la tabla.\"; fi"
         }]
       }
     ],

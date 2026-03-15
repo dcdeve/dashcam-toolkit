@@ -1,6 +1,9 @@
 // IPC channel definitions — single source of truth for main + preload + renderer
 
 export const IPC = {
+  DIALOG: {
+    OPEN_DIRECTORY: 'dialog:openDirectory',
+  },
   DB: {
     CONNECT: 'db:connect',
     MIGRATE: 'db:migrate',
@@ -9,6 +12,7 @@ export const IPC = {
   SCANNER: {
     SCAN: 'scanner:scan',
     LIST_CLIPS: 'scanner:listClips',
+    PROGRESS: 'scanner:progress',
   },
   TRIPS: {
     LIST: 'trips:list',

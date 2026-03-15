@@ -1,11 +1,15 @@
 import { contextBridge, ipcRenderer } from 'electron';
 import { IPC } from '../shared/ipc.js';
 import type { DatabaseConfig } from '../interfaces/db.js';
-import type { ScanOptions } from '../interfaces/scanner.js';
+import type { ScanOptions, ScanProgress } from '../interfaces/scanner.js';
 import type { ExportOptions } from '../interfaces/exporter.js';
 
 const api = {
   platform: process.platform,
+
+  dialog: {
+    openDirectory: (): Promise<string | null> => ipcRenderer.invoke(IPC.DIALOG.OPEN_DIRECTORY),
+  },
 
   db: {
     connect: (config: DatabaseConfig) => ipcRenderer.invoke(IPC.DB.CONNECT, config),
@@ -16,6 +20,15 @@ const api = {
   scanner: {
     scan: (options: ScanOptions) => ipcRenderer.invoke(IPC.SCANNER.SCAN, options),
     listClips: (dir: string) => ipcRenderer.invoke(IPC.SCANNER.LIST_CLIPS, dir),
+    onProgress: (callback: (progress: ScanProgress) => void) => {
+      const handler = (_event: Electron.IpcRendererEvent, data: ScanProgress): void => {
+        callback(data);
+      };
+      ipcRenderer.on(IPC.SCANNER.PROGRESS, handler);
+      return () => {
+        ipcRenderer.removeListener(IPC.SCANNER.PROGRESS, handler);
+      };
+    },
   },
 
   trips: {

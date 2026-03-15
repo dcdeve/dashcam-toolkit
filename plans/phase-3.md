@@ -26,7 +26,7 @@ Electron como shell visual sobre el core ya validado por CLI.
 - **Input:** Scanner + patterns
 - **Output:** File dialog → pattern confirmation → progress bar
 - **Criterio de done:** Import de carpeta con deteccion automatica
-- **Estado:** [ ]
+- **Estado:** [x]
 
 ### Paso 3.4: Library — Clips tab
 - **Input:** DB + thumbnails

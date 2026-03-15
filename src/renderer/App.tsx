@@ -1,34 +1,38 @@
 import { useState } from 'react';
+import { ImportFlow } from './pages/ImportFlow';
+
+type Page = 'home' | 'import';
 
 export function App(): React.ReactElement {
-  const [patterns, setPatterns] = useState<string[]>([]);
-  const [status, setStatus] = useState('Click to test IPC');
-
-  async function testIpc(): Promise<void> {
-    try {
-      const result = await window.api.patterns.list();
-      setPatterns(result.map((p: { name: string }) => p.name));
-      setStatus(`IPC OK — ${result.length} patterns loaded`);
-    } catch (err) {
-      setStatus(`IPC Error: ${err instanceof Error ? err.message : String(err)}`);
-    }
-  }
+  const [page, setPage] = useState<Page>('home');
 
   return (
-    <div style={{ padding: '2rem', fontFamily: 'system-ui, sans-serif' }}>
-      <h1>Dashcam Toolkit</h1>
-      <p>Platform: {window.api.platform}</p>
-      <button onClick={testIpc} type="button">
-        Test IPC: patterns.list()
-      </button>
-      <p>{status}</p>
-      {patterns.length > 0 && (
-        <ul>
-          {patterns.map((name) => (
-            <li key={name}>{name}</li>
-          ))}
-        </ul>
+    <div style={{ fontFamily: 'system-ui, sans-serif' }}>
+      <nav style={{ padding: '1rem 2rem', borderBottom: '1px solid #e5e7eb' }}>
+        <button
+          onClick={() => setPage('home')}
+          type="button"
+          style={{ marginRight: '1rem', fontWeight: page === 'home' ? 'bold' : 'normal' }}
+        >
+          Home
+        </button>
+        <button
+          onClick={() => setPage('import')}
+          type="button"
+          style={{ fontWeight: page === 'import' ? 'bold' : 'normal' }}
+        >
+          Import
+        </button>
+      </nav>
+
+      {page === 'home' && (
+        <div style={{ padding: '2rem' }}>
+          <h1>Dashcam Toolkit</h1>
+          <p>Platform: {window.api.platform}</p>
+        </div>
       )}
+
+      {page === 'import' && <ImportFlow onDone={() => setPage('home')} />}
     </div>
   );
 }
