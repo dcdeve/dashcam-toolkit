@@ -30,6 +30,8 @@ export const IPC = {
   EXPORTER: {
     EXPORT: 'exporter:export',
     CANCEL: 'exporter:cancel',
+    PROGRESS: 'exporter:progress',
+    OPEN_FOLDER: 'exporter:openFolder',
   },
   THUMBNAILS: {
     GENERATE: 'thumbnails:generate',

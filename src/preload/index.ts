@@ -2,7 +2,7 @@ import { contextBridge, ipcRenderer } from 'electron';
 import { IPC } from '../shared/ipc.js';
 import type { DatabaseConfig } from '../interfaces/db.js';
 import type { ScanOptions, ScanProgress } from '../interfaces/scanner.js';
-import type { ExportOptions } from '../interfaces/exporter.js';
+import type { ExportOptions, ExportProgress } from '../interfaces/exporter.js';
 
 const api = {
   platform: process.platform,
@@ -50,6 +50,16 @@ const api = {
   exporter: {
     export: (options: ExportOptions) => ipcRenderer.invoke(IPC.EXPORTER.EXPORT, options),
     cancel: () => ipcRenderer.invoke(IPC.EXPORTER.CANCEL),
+    onProgress: (callback: (progress: ExportProgress) => void) => {
+      const handler = (_event: Electron.IpcRendererEvent, data: ExportProgress): void => {
+        callback(data);
+      };
+      ipcRenderer.on(IPC.EXPORTER.PROGRESS, handler);
+      return () => {
+        ipcRenderer.removeListener(IPC.EXPORTER.PROGRESS, handler);
+      };
+    },
+    openFolder: (filePath: string) => ipcRenderer.invoke(IPC.EXPORTER.OPEN_FOLDER, filePath),
   },
 
   thumbnails: {

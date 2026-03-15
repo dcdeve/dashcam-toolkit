@@ -92,12 +92,28 @@ const emptyStyle: React.CSSProperties = {
   padding: '3rem 0',
 };
 
+const actionBtnStyle: React.CSSProperties = {
+  padding: '2px 8px',
+  border: '1px solid #1e2330',
+  borderRadius: '3px',
+  background: 'transparent',
+  color: '#5a6175',
+  cursor: 'pointer',
+  fontSize: '0.6rem',
+  fontFamily: 'inherit',
+  fontWeight: 500,
+  letterSpacing: '0.04em',
+  textTransform: 'uppercase',
+  transition: 'color 0.15s, border-color 0.15s',
+};
+
 interface TripTableProps {
   trips: Trip[];
   sortField: TripSortField;
   sortDir: SortDir;
   onSort: (field: TripSortField) => void;
   onPlay?: (trip: Trip) => void;
+  onExport?: (tripId: string) => void;
 }
 
 export function TripTable({
@@ -106,6 +122,7 @@ export function TripTable({
   sortDir,
   onSort,
   onPlay,
+  onExport,
 }: TripTableProps): React.ReactElement {
   if (trips.length === 0) {
     return <p style={emptyStyle}>No trips found. Import a dashcam folder first.</p>;
@@ -129,6 +146,7 @@ export function TripTable({
             </th>
           ))}
           <th style={{ ...thStyle, cursor: 'default' }}>Status</th>
+          <th style={{ ...thStyle, cursor: 'default' }}></th>
         </tr>
       </thead>
       <tbody>
@@ -143,6 +161,20 @@ export function TripTable({
             </td>
             <td style={tdStyle}>
               <span style={statusStyle(trip.status)}>{trip.status}</span>
+            </td>
+            <td style={tdStyle}>
+              {onExport && (
+                <button
+                  type="button"
+                  style={actionBtnStyle}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onExport(trip.id);
+                  }}
+                >
+                  Export
+                </button>
+              )}
             </td>
           </tr>
         ))}

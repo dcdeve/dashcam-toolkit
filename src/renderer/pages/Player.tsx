@@ -91,12 +91,26 @@ const metaValueStyle: React.CSSProperties = {
   marginLeft: '6px',
 };
 
+const exportBtnStyle: React.CSSProperties = {
+  padding: '4px 10px',
+  border: '1px solid #1e2330',
+  borderRadius: '4px',
+  background: 'transparent',
+  color: '#5a6175',
+  cursor: 'pointer',
+  fontSize: '0.7rem',
+  fontFamily: 'inherit',
+  fontWeight: 500,
+  letterSpacing: '0.05em',
+};
+
 interface PlayerProps {
   clip: Clip;
   onBack: () => void;
+  onExport?: () => void;
 }
 
-export function Player({ clip, onBack }: PlayerProps): React.ReactElement {
+export function Player({ clip, onBack, onExport }: PlayerProps): React.ReactElement {
   const videoSrc = `dashcam-file://${clip.path}`;
 
   return (
@@ -106,6 +120,11 @@ export function Player({ clip, onBack }: PlayerProps): React.ReactElement {
           Back
         </button>
         <span style={filenameStyle}>{clip.filename}</span>
+        {onExport && (
+          <button type="button" style={exportBtnStyle} onClick={onExport}>
+            Export
+          </button>
+        )}
       </div>
 
       <div style={videoContainerStyle}>

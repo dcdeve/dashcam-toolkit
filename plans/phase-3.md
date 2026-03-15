@@ -62,7 +62,7 @@ Electron como shell visual sobre el core ya validado por CLI.
 - **Input:** Exporter + UI
 - **Output:** Resumen (lossless vs re-encode), progress bar, "Abrir carpeta"
 - **Criterio de done:** Export completo desde UI
-- **Estado:** [ ]
+- **Estado:** [x]
 
 ### Paso 3.10: Settings
 - **Input:** DB settings

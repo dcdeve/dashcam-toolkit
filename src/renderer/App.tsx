@@ -3,9 +3,15 @@ import { ImportFlow } from './pages/ImportFlow';
 import { Library } from './pages/Library';
 import { Player } from './pages/Player';
 import { TripPlayer } from './pages/TripPlayer';
+import { Export } from './pages/Export';
 import type { Clip, Trip } from '../interfaces/trips.js';
 
-type Page = 'home' | 'library' | 'import' | 'player' | 'trip-player';
+type Page = 'home' | 'library' | 'import' | 'player' | 'trip-player' | 'export';
+
+interface ExportTarget {
+  tripIds?: string[];
+  clipPaths?: string[];
+}
 
 const shellStyle: React.CSSProperties = {
   fontFamily: "'SF Mono', 'Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace",
@@ -70,6 +76,7 @@ export function App(): React.ReactElement {
   const [page, setPage] = useState<Page>('home');
   const [selectedClip, setSelectedClip] = useState<Clip | null>(null);
   const [selectedTrip, setSelectedTrip] = useState<Trip | null>(null);
+  const [exportTarget, setExportTarget] = useState<ExportTarget>({});
 
   const handlePlayClip = (clip: Clip): void => {
     setSelectedClip(clip);
@@ -79,6 +86,16 @@ export function App(): React.ReactElement {
   const handlePlayTrip = (trip: Trip): void => {
     setSelectedTrip(trip);
     setPage('trip-player');
+  };
+
+  const handleExportTrip = (tripId: string): void => {
+    setExportTarget({ tripIds: [tripId] });
+    setPage('export');
+  };
+
+  const handleExportClip = (clip: Clip): void => {
+    setExportTarget({ clipPaths: [clip.path] });
+    setPage('export');
   };
 
   return (
@@ -110,12 +127,23 @@ export function App(): React.ReactElement {
         </div>
       )}
 
-      {page === 'library' && <Library onPlayClip={handlePlayClip} onPlayTrip={handlePlayTrip} />}
+      {page === 'library' && (
+        <Library
+          onPlayClip={handlePlayClip}
+          onPlayTrip={handlePlayTrip}
+          onExportTrip={handleExportTrip}
+          onExportClip={handleExportClip}
+        />
+      )}
 
       {page === 'import' && <ImportFlow onDone={() => setPage('library')} />}
 
       {page === 'player' && selectedClip && (
-        <Player clip={selectedClip} onBack={() => setPage('library')} />
+        <Player
+          clip={selectedClip}
+          onBack={() => setPage('library')}
+          onExport={() => handleExportClip(selectedClip)}
+        />
       )}
 
       {page === 'trip-player' && selectedTrip && (
@@ -123,8 +151,11 @@ export function App(): React.ReactElement {
           tripId={selectedTrip.id}
           tripName={selectedTrip.name}
           onBack={() => setPage('library')}
+          onExport={() => handleExportTrip(selectedTrip.id)}
         />
       )}
+
+      {page === 'export' && <Export target={exportTarget} onBack={() => setPage('library')} />}
     </div>
   );
 }

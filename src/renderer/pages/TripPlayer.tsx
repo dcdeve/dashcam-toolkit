@@ -152,13 +152,32 @@ const loadingStyle: React.CSSProperties = {
   fontSize: '0.8rem',
 };
 
+const exportBtnStyle: React.CSSProperties = {
+  padding: '4px 10px',
+  border: '1px solid #1e2330',
+  borderRadius: '4px',
+  background: 'transparent',
+  color: '#5a6175',
+  cursor: 'pointer',
+  fontSize: '0.7rem',
+  fontFamily: 'inherit',
+  fontWeight: 500,
+  letterSpacing: '0.05em',
+};
+
 interface TripPlayerProps {
   tripId: string;
   tripName: string;
   onBack: () => void;
+  onExport?: () => void;
 }
 
-export function TripPlayer({ tripId, tripName, onBack }: TripPlayerProps): React.ReactElement {
+export function TripPlayer({
+  tripId,
+  tripName,
+  onBack,
+  onExport,
+}: TripPlayerProps): React.ReactElement {
   const [clips, setClips] = useState<Clip[]>([]);
   const [loading, setLoading] = useState(true);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -322,6 +341,11 @@ export function TripPlayer({ tripId, tripName, onBack }: TripPlayerProps): React
         <span style={clipIndicatorStyle}>
           Clip {currentIndex + 1}/{clips.length}
         </span>
+        {onExport && (
+          <button type="button" style={exportBtnStyle} onClick={onExport}>
+            Export
+          </button>
+        )}
       </div>
 
       <div style={videoContainerStyle}>

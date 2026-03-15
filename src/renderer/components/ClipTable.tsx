@@ -93,12 +93,28 @@ const codecStyle: React.CSSProperties = {
   textTransform: 'uppercase',
 };
 
+const actionBtnStyle: React.CSSProperties = {
+  padding: '2px 8px',
+  border: '1px solid #1e2330',
+  borderRadius: '3px',
+  background: 'transparent',
+  color: '#5a6175',
+  cursor: 'pointer',
+  fontSize: '0.6rem',
+  fontFamily: 'inherit',
+  fontWeight: 500,
+  letterSpacing: '0.04em',
+  textTransform: 'uppercase',
+  transition: 'color 0.15s, border-color 0.15s',
+};
+
 interface ClipTableProps {
   clips: Clip[];
   sortField: SortField;
   sortDir: SortDir;
   onSort: (field: SortField) => void;
   onPlay?: (clip: Clip) => void;
+  onExport?: (clip: Clip) => void;
 }
 
 export function ClipTable({
@@ -107,6 +123,7 @@ export function ClipTable({
   sortDir,
   onSort,
   onPlay,
+  onExport,
 }: ClipTableProps): React.ReactElement {
   if (clips.length === 0) {
     return <p style={emptyStyle}>No clips found. Import a dashcam folder first.</p>;
@@ -130,6 +147,7 @@ export function ClipTable({
             </th>
           ))}
           <th style={{ ...thStyle, cursor: 'default' }}>Codec</th>
+          <th style={{ ...thStyle, cursor: 'default' }}></th>
         </tr>
       </thead>
       <tbody>
@@ -146,6 +164,20 @@ export function ClipTable({
             <td style={tdStyle}>{formatSize(clip.size)}</td>
             <td style={tdStyle}>
               <span style={codecStyle}>{clip.codec}</span>
+            </td>
+            <td style={tdStyle}>
+              {onExport && (
+                <button
+                  type="button"
+                  style={actionBtnStyle}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onExport(clip);
+                  }}
+                >
+                  Export
+                </button>
+              )}
             </td>
           </tr>
         ))}
