@@ -50,7 +50,7 @@ CLI funcional como primera interfaz de usuario.
 - **Input:** scanner + patterns + trips + db
 - **Output:** `dashcam scan <dir>` funcional (auto-detect, agrupacion, --rescan, --pattern, --gap)
 - **Criterio de done:** Scan completo desde terminal
-- **Estado:** [ ]
+- **Estado:** [x]
 
 ### Paso 2.8: CLI — export command
 - **Input:** exporter + db

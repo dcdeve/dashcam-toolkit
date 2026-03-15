@@ -2,6 +2,7 @@
 
 import { Command } from 'commander';
 import { VERSION } from '../core/index.js';
+import { scanAction } from './commands/scan.js';
 
 const program = new Command();
 
@@ -14,9 +15,7 @@ program
   .option('--rescan', 'Re-scan (update new/removed clips)')
   .option('--pattern <name>', 'Force pattern (skip auto-detect)')
   .option('--gap <minutes>', 'Override trip gap in minutes', '5')
-  .action((_dir, _opts) => {
-    console.log('scan: not implemented yet');
-  });
+  .action(scanAction);
 
 program
   .command('export')
