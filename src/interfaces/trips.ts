@@ -5,7 +5,7 @@ export type TripStatus = 'complete' | 'partial' | 'disconnected';
 export type CodecCompatibility = 'compatible' | 'incompatible' | 'unknown';
 
 export interface Clip {
-  id: number;
+  id: string;
   path: string;
   filename: string;
   size: number;
@@ -16,13 +16,13 @@ export interface Clip {
   fps: number;
   patternId: string | null;
   timestampSource: Date;
-  tripId: number | null;
+  tripId: string | null;
   status: ClipStatus;
   createdAt: Date;
 }
 
 export interface Trip {
-  id: number;
+  id: string;
   name: string;
   startedAt: Date;
   endedAt: Date;
@@ -41,9 +41,9 @@ export interface GroupOptions {
 export type TripError = 'TRIP_NOT_FOUND' | 'TRIP_NO_CLIPS' | 'TRIP_CODEC_INCOMPATIBLE';
 
 export interface TripsModule {
-  groupClips(clipIds: number[], options?: GroupOptions): Promise<Trip[]>;
-  getTrip(tripId: number): Promise<Trip>;
-  getClips(tripId: number): Promise<Clip[]>;
+  groupClips(clipIds: string[], options?: GroupOptions): Promise<Trip[]>;
+  getTrip(tripId: string): Promise<Trip>;
+  getClips(tripId: string): Promise<Clip[]>;
   list(): Promise<Trip[]>;
-  remove(tripId: number): Promise<void>;
+  remove(tripId: string): Promise<void>;
 }

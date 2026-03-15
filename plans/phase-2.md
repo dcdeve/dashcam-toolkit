@@ -38,7 +38,7 @@ CLI funcional como primera interfaz de usuario.
 - **Input:** Interfaces de trips
 - **Output:** Agrupacion por gap temporal, compatibilidad codecs, naming
 - **Criterio de done:** Viajes detectados correctamente en set de prueba
-- **Estado:** [ ]
+- **Estado:** [x]
 
 ### Paso 2.6: exporter — Concat lossless + re-encode
 - **Input:** Interfaces de exporter

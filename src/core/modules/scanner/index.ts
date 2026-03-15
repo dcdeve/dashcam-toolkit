@@ -6,6 +6,7 @@ import { patterns as patternsModule } from '../patterns/index.js';
 import { getDb } from '../db/index.js';
 import { schema } from '../db/index.js';
 import { eq } from 'drizzle-orm';
+import { trips as tripsModule } from '../trips/index.js';
 import type {
   ScannerModule,
   ScanOptions,
@@ -83,7 +84,7 @@ function probeResultToClip(
   tsSource: Date,
 ): Clip {
   return {
-    id: 0,
+    id: '',
     path: filePath,
     filename: basename(filePath),
     size: probe.size,
@@ -281,9 +282,25 @@ export const scanner: ScannerModule = {
       }
     }
 
-    // Phase: grouping (stub — real implementation in step 2.5)
+    // Phase: grouping
     onProgress?.({ phase: 'grouping', current: 0, total: 0 });
-    const tripsGrouped = 0;
+    const insertedPaths = new Set(clips.map((c) => c.path));
+    const insertedClipIds = db
+      .select({ id: schema.clips.id, path: schema.clips.path })
+      .from(schema.clips)
+      .all()
+      .filter((c) => insertedPaths.has(c.path))
+      .map((c) => c.id);
+
+    let tripsGrouped = 0;
+    if (insertedClipIds.length > 0) {
+      const gapMinutes = options.gapMinutes;
+      const grouped = await tripsModule.groupClips(
+        insertedClipIds,
+        gapMinutes ? { gapMinutes } : undefined,
+      );
+      tripsGrouped = grouped.length;
+    }
     onProgress?.({ phase: 'grouping', current: 1, total: 1 });
 
     return {

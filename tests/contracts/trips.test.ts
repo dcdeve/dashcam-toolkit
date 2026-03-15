@@ -3,7 +3,7 @@ import type { Trip, Clip, GroupOptions, TripError, TripsModule } from '../../src
 
 describe('[trips] - Contract', () => {
   const sampleTrip: Trip = {
-    id: 1,
+    id: 'trip-001',
     name: 'Trip 2026-03-15',
     startedAt: new Date(),
     endedAt: new Date(),
@@ -15,7 +15,7 @@ describe('[trips] - Contract', () => {
   };
 
   const sampleClip: Clip = {
-    id: 1,
+    id: 'clip-001',
     path: '/mnt/sd/DCIM/clip001.mp4',
     filename: 'clip001.mp4',
     size: 512000,
@@ -26,25 +26,25 @@ describe('[trips] - Contract', () => {
     fps: 30,
     patternId: 'garmin',
     timestampSource: new Date(),
-    tripId: 1,
+    tripId: 'trip-001',
     status: 'available',
     createdAt: new Date(),
   };
 
   const stub: TripsModule = {
-    async groupClips(_clipIds: number[], _options?: GroupOptions) {
+    async groupClips(_clipIds: string[], _options?: GroupOptions) {
       return [sampleTrip];
     },
-    async getTrip(_tripId: number) {
+    async getTrip(_tripId: string) {
       return sampleTrip;
     },
-    async getClips(_tripId: number) {
+    async getClips(_tripId: string) {
       return [sampleClip];
     },
     async list() {
       return [sampleTrip];
     },
-    async remove(_tripId: number) {},
+    async remove(_tripId: string) {},
   };
 
   it('implements all required methods', () => {
