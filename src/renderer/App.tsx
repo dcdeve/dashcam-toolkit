@@ -4,9 +4,10 @@ import { Library } from './pages/Library';
 import { Player } from './pages/Player';
 import { TripPlayer } from './pages/TripPlayer';
 import { Export } from './pages/Export';
+import { Settings } from './pages/Settings';
 import type { Clip, Trip } from '../interfaces/trips.js';
 
-type Page = 'home' | 'library' | 'import' | 'player' | 'trip-player' | 'export';
+type Page = 'home' | 'library' | 'import' | 'player' | 'trip-player' | 'export' | 'settings';
 
 interface ExportTarget {
   tripIds?: string[];
@@ -118,6 +119,13 @@ export function App(): React.ReactElement {
         >
           Import
         </button>
+        <button
+          onClick={() => setPage('settings')}
+          type="button"
+          style={navBtnStyle(page === 'settings')}
+        >
+          Settings
+        </button>
       </nav>
 
       {page === 'home' && (
@@ -156,6 +164,8 @@ export function App(): React.ReactElement {
       )}
 
       {page === 'export' && <Export target={exportTarget} onBack={() => setPage('library')} />}
+
+      {page === 'settings' && <Settings />}
     </div>
   );
 }

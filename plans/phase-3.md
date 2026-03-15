@@ -68,7 +68,7 @@ Electron como shell visual sobre el core ya validado por CLI.
 - **Input:** DB settings
 - **Output:** Export dir, gap minutes, FFmpeg path, patterns CRUD, export template
 - **Criterio de done:** Settings persistidos entre sesiones
-- **Estado:** [ ]
+- **Estado:** [x]
 
 ### Paso 3.11: Compression presets
 - **Input:** Exporter

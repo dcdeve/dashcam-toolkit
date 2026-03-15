@@ -62,6 +62,15 @@ const api = {
     openFolder: (filePath: string) => ipcRenderer.invoke(IPC.EXPORTER.OPEN_FOLDER, filePath),
   },
 
+  settings: {
+    getAll: (): Promise<Record<string, string>> =>
+      ipcRenderer.invoke(IPC.SETTINGS.GET_ALL) as Promise<Record<string, string>>,
+    get: (key: string): Promise<string | null> =>
+      ipcRenderer.invoke(IPC.SETTINGS.GET, key) as Promise<string | null>,
+    set: (key: string, value: string): Promise<void> =>
+      ipcRenderer.invoke(IPC.SETTINGS.SET, key, value) as Promise<void>,
+  },
+
   thumbnails: {
     generate: (clipId: number) => ipcRenderer.invoke(IPC.THUMBNAILS.GENERATE, clipId),
     generateScrub: (tripId: number) => ipcRenderer.invoke(IPC.THUMBNAILS.GENERATE_SCRUB, tripId),

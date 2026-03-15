@@ -6,6 +6,7 @@ import { registerTripsHandlers } from './trips.js';
 import { registerPatternsHandlers } from './patterns.js';
 import { registerExporterHandlers } from './exporter.js';
 import { registerThumbnailsHandlers } from './thumbnails.js';
+import { registerSettingsHandlers } from './settings.js';
 
 export function registerAllHandlers(): void {
   registerDialogHandlers();
@@ -16,4 +17,5 @@ export function registerAllHandlers(): void {
   registerPatternsHandlers();
   registerExporterHandlers();
   registerThumbnailsHandlers();
+  registerSettingsHandlers();
 }

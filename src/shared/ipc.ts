@@ -27,6 +27,11 @@ export const IPC = {
     LIST: 'patterns:list',
     DETECT: 'patterns:detect',
   },
+  SETTINGS: {
+    GET_ALL: 'settings:getAll',
+    GET: 'settings:get',
+    SET: 'settings:set',
+  },
   EXPORTER: {
     EXPORT: 'exporter:export',
     CANCEL: 'exporter:cancel',
