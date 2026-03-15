@@ -44,7 +44,7 @@ Electron como shell visual sobre el core ya validado por CLI.
 - **Input:** FFmpeg + clips
 - **Output:** 1 por clip + ~30 por viaje, cache en disco
 - **Criterio de done:** Generacion y cache funcional
-- **Estado:** [ ]
+- **Estado:** [x]
 
 ### Paso 3.7: Player — Modo clip
 - **Input:** Clip seleccionado
