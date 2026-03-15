@@ -1,5 +1,6 @@
 # claude-pw - session state (personal)
 STATUS.md
+.planning/
 
 # Claude Code - config local
 .claude/settings.local.json
