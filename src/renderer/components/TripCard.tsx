@@ -123,7 +123,12 @@ const compatBadgeStyle = (compat: string): React.CSSProperties => ({
   color: compat === 'compatible' ? '#4ade80' : compat === 'incompatible' ? '#f87171' : '#5a6175',
 });
 
-export function TripCard({ trip }: { trip: Trip }): React.ReactElement {
+interface TripCardProps {
+  trip: Trip;
+  onClick?: () => void;
+}
+
+export function TripCard({ trip, onClick }: TripCardProps): React.ReactElement {
   const [scrubPos, setScrubPos] = useState<number | null>(null);
   const [hovered, setHovered] = useState(false);
 
@@ -145,6 +150,7 @@ export function TripCard({ trip }: { trip: Trip }): React.ReactElement {
       style={cardStyle(hovered)}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={handleMouseLeave}
+      onClick={onClick}
     >
       <div style={scrubAreaStyle} onMouseMove={handleMouseMove}>
         <span style={clipCountBadgeStyle}>{trip.clipCount} clips</span>

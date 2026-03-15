@@ -97,6 +97,7 @@ interface TripTableProps {
   sortField: TripSortField;
   sortDir: SortDir;
   onSort: (field: TripSortField) => void;
+  onPlay?: (trip: Trip) => void;
 }
 
 export function TripTable({
@@ -104,6 +105,7 @@ export function TripTable({
   sortField,
   sortDir,
   onSort,
+  onPlay,
 }: TripTableProps): React.ReactElement {
   if (trips.length === 0) {
     return <p style={emptyStyle}>No trips found. Import a dashcam folder first.</p>;
@@ -131,7 +133,7 @@ export function TripTable({
       </thead>
       <tbody>
         {trips.map((trip, i) => (
-          <tr key={trip.id} style={trStyle(i % 2 === 0)}>
+          <tr key={trip.id} style={trStyle(i % 2 === 0)} onClick={() => onPlay?.(trip)}>
             <td style={{ ...tdStyle, color: '#c9cdd4', fontWeight: 500 }}>{trip.name}</td>
             <td style={tdStyle}>{formatDate(trip.startedAt)}</td>
             <td style={tdStyle}>{trip.clipCount}</td>

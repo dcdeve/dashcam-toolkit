@@ -138,9 +138,10 @@ const errorStyle: React.CSSProperties = {
 
 interface LibraryProps {
   onPlayClip?: (clip: Clip) => void;
+  onPlayTrip?: (trip: Trip) => void;
 }
 
-export function Library({ onPlayClip }: LibraryProps): React.ReactElement {
+export function Library({ onPlayClip, onPlayTrip }: LibraryProps): React.ReactElement {
   const [tab, setTab] = useState<LibraryTab>(() => getStored('library-tab', 'clips'));
   const [viewMode, setViewMode] = useState<ViewMode>(() => getStored('library-view-mode', 'list'));
 
@@ -297,9 +298,10 @@ export function Library({ onPlayClip }: LibraryProps): React.ReactElement {
             sortField={tripSortField}
             sortDir={tripSortDir}
             onSort={handleTripSort}
+            onPlay={onPlayTrip}
           />
         ) : (
-          <TripGrid trips={sortedTrips} />
+          <TripGrid trips={sortedTrips} onPlay={onPlayTrip} />
         ))}
     </div>
   );

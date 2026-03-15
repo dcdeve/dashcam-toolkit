@@ -14,7 +14,12 @@ const emptyStyle: React.CSSProperties = {
   padding: '3rem 0',
 };
 
-export function TripGrid({ trips }: { trips: Trip[] }): React.ReactElement {
+interface TripGridProps {
+  trips: Trip[];
+  onPlay?: (trip: Trip) => void;
+}
+
+export function TripGrid({ trips, onPlay }: TripGridProps): React.ReactElement {
   if (trips.length === 0) {
     return <p style={emptyStyle}>No trips found. Import a dashcam folder first.</p>;
   }
@@ -22,7 +27,7 @@ export function TripGrid({ trips }: { trips: Trip[] }): React.ReactElement {
   return (
     <div style={gridStyle}>
       {trips.map((trip) => (
-        <TripCard key={trip.id} trip={trip} />
+        <TripCard key={trip.id} trip={trip} onClick={() => onPlay?.(trip)} />
       ))}
     </div>
   );

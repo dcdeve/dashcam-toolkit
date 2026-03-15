@@ -2,9 +2,10 @@ import { useState } from 'react';
 import { ImportFlow } from './pages/ImportFlow';
 import { Library } from './pages/Library';
 import { Player } from './pages/Player';
-import type { Clip } from '../interfaces/trips.js';
+import { TripPlayer } from './pages/TripPlayer';
+import type { Clip, Trip } from '../interfaces/trips.js';
 
-type Page = 'home' | 'library' | 'import' | 'player';
+type Page = 'home' | 'library' | 'import' | 'player' | 'trip-player';
 
 const shellStyle: React.CSSProperties = {
   fontFamily: "'SF Mono', 'Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace",
@@ -68,10 +69,16 @@ const platformStyle: React.CSSProperties = {
 export function App(): React.ReactElement {
   const [page, setPage] = useState<Page>('home');
   const [selectedClip, setSelectedClip] = useState<Clip | null>(null);
+  const [selectedTrip, setSelectedTrip] = useState<Trip | null>(null);
 
   const handlePlayClip = (clip: Clip): void => {
     setSelectedClip(clip);
     setPage('player');
+  };
+
+  const handlePlayTrip = (trip: Trip): void => {
+    setSelectedTrip(trip);
+    setPage('trip-player');
   };
 
   return (
@@ -103,12 +110,20 @@ export function App(): React.ReactElement {
         </div>
       )}
 
-      {page === 'library' && <Library onPlayClip={handlePlayClip} />}
+      {page === 'library' && <Library onPlayClip={handlePlayClip} onPlayTrip={handlePlayTrip} />}
 
       {page === 'import' && <ImportFlow onDone={() => setPage('library')} />}
 
       {page === 'player' && selectedClip && (
         <Player clip={selectedClip} onBack={() => setPage('library')} />
+      )}
+
+      {page === 'trip-player' && selectedTrip && (
+        <TripPlayer
+          tripId={selectedTrip.id}
+          tripName={selectedTrip.name}
+          onBack={() => setPage('library')}
+        />
       )}
     </div>
   );
