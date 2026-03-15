@@ -14,6 +14,9 @@ export const IPC = {
     LIST_CLIPS: 'scanner:listClips',
     PROGRESS: 'scanner:progress',
   },
+  CLIPS: {
+    LIST: 'clips:list',
+  },
   TRIPS: {
     LIST: 'trips:list',
     GET: 'trips:get',

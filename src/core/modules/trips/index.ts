@@ -24,7 +24,7 @@ export class TripsModuleError extends Error {
 
 const DEFAULT_GAP_MINUTES = 5;
 
-interface DbClipRow {
+export interface DbClipRow {
   id: string;
   path: string;
   durationMs: number | null;
@@ -39,7 +39,7 @@ interface DbClipRow {
   createdAt: number;
 }
 
-function dbClipToClip(row: DbClipRow): Clip {
+export function dbClipToClip(row: DbClipRow): Clip {
   return {
     id: row.id,
     path: row.path,

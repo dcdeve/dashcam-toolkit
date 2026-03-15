@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { ImportFlow } from './pages/ImportFlow';
+import { Library } from './pages/Library';
 
-type Page = 'home' | 'import';
+type Page = 'home' | 'library' | 'import';
 
 export function App(): React.ReactElement {
   const [page, setPage] = useState<Page>('home');
@@ -15,6 +16,13 @@ export function App(): React.ReactElement {
           style={{ marginRight: '1rem', fontWeight: page === 'home' ? 'bold' : 'normal' }}
         >
           Home
+        </button>
+        <button
+          onClick={() => setPage('library')}
+          type="button"
+          style={{ marginRight: '1rem', fontWeight: page === 'library' ? 'bold' : 'normal' }}
+        >
+          Library
         </button>
         <button
           onClick={() => setPage('import')}
@@ -32,7 +40,9 @@ export function App(): React.ReactElement {
         </div>
       )}
 
-      {page === 'import' && <ImportFlow onDone={() => setPage('home')} />}
+      {page === 'library' && <Library />}
+
+      {page === 'import' && <ImportFlow onDone={() => setPage('library')} />}
     </div>
   );
 }

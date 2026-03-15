@@ -31,6 +31,10 @@ const api = {
     },
   },
 
+  clips: {
+    list: () => ipcRenderer.invoke(IPC.CLIPS.LIST),
+  },
+
   trips: {
     list: () => ipcRenderer.invoke(IPC.TRIPS.LIST),
     get: (tripId: string) => ipcRenderer.invoke(IPC.TRIPS.GET, tripId),
