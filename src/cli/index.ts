@@ -3,6 +3,7 @@
 import { Command } from 'commander';
 import { VERSION } from '../core/index.js';
 import { scanAction } from './commands/scan.js';
+import { exportAction } from './commands/export.js';
 
 const program = new Command();
 
@@ -26,9 +27,7 @@ program
   .option('--output <path>', 'Output destination')
   .option('--reencode', 'Force re-encode instead of lossless')
   .option('--preset <name>', 'Quality preset (alta/media/baja)')
-  .action((_targets, _opts) => {
-    console.log('export: not implemented yet');
-  });
+  .action(exportAction);
 
 program
   .command('info')

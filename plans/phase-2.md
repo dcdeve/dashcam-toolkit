@@ -56,7 +56,7 @@ CLI funcional como primera interfaz de usuario.
 - **Input:** exporter + db
 - **Output:** `dashcam export` funcional (trips, clips, --range, --reencode, --preset)
 - **Criterio de done:** Export completo desde terminal
-- **Estado:** [ ]
+- **Estado:** [x]
 
 ### Paso 2.9: CLI — comandos auxiliares
 - **Input:** Core modules + db

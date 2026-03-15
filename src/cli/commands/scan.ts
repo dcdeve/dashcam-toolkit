@@ -1,22 +1,14 @@
 import { resolve } from 'node:path';
-import { homedir } from 'node:os';
-import { mkdirSync } from 'node:fs';
-import { join } from 'node:path';
 import { db } from '../../core/modules/db/index.js';
 import { ffmpeg } from '../../core/modules/ffmpeg/index.js';
 import { scanner } from '../../core/modules/scanner/index.js';
+import { getDbPath } from '../utils.js';
 import type { ScanProgress } from '../../interfaces/scanner.js';
 
 interface ScanCommandOptions {
   rescan?: boolean;
   pattern?: string;
   gap: string;
-}
-
-function getDbPath(): string {
-  const dir = join(homedir(), '.dashcam-toolkit');
-  mkdirSync(dir, { recursive: true });
-  return join(dir, 'dashcam.db');
 }
 
 function formatProgress(progress: ScanProgress): void {
