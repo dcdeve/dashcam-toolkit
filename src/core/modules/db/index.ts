@@ -32,7 +32,31 @@ function getState(): DbState {
   return state;
 }
 
-const migrationsFolder = new URL('../../migrations', import.meta.url).pathname;
+import { dirname, join } from 'path';
+import { fileURLToPath } from 'url';
+import { existsSync } from 'fs';
+
+function findMigrationsFolder(): string {
+  // Packaged Electron: migrations in process.resourcesPath
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const resourcesPath = (process as any).resourcesPath as string | undefined;
+  if (resourcesPath) {
+    const packaged = join(resourcesPath, 'migrations');
+    if (existsSync(packaged)) return packaged;
+  }
+
+  // Dev: walk up from current file to find resources/migrations
+  let dir = dirname(fileURLToPath(import.meta.url));
+  for (let i = 0; i < 6; i++) {
+    const candidate = join(dir, 'resources', 'migrations');
+    if (existsSync(candidate)) return candidate;
+    dir = dirname(dir);
+  }
+
+  throw new Error('Could not find migrations folder');
+}
+
+const migrationsFolder = findMigrationsFolder();
 
 export const db: DbModule = {
   connect(config: DatabaseConfig): void {
