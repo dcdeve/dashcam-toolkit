@@ -32,8 +32,20 @@ format: ## Format con prettier
 format-check: ## Verificar formato
 	npx prettier --check 'src/**/*.ts'
 
+.PHONY: test-contracts
+test-contracts: ## Correr tests de contrato
+	npx vitest run tests/contracts/
+
 .PHONY: check
 check: lint format-check build test ## Validacion completa
+
+.PHONY: clean
+clean: ## Borrar dist/
+	rm -rf dist/
+
+.PHONY: changelog
+changelog: ## Generar CHANGELOG.md desde commits
+	npx changelogen --output CHANGELOG.md
 
 .PHONY: status
 status: ## Mostrar estado actual

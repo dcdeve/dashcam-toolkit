@@ -5,10 +5,7 @@ import { VERSION } from '../core/index.js';
 
 const program = new Command();
 
-program
-  .name('dashcam')
-  .description('Cross-platform dashcam video processor')
-  .version(VERSION);
+program.name('dashcam').description('Cross-platform dashcam video processor').version(VERSION);
 
 program
   .command('scan')

@@ -36,7 +36,7 @@ Scaffold como proyecto Node.js + TS puro (Electron se agrega en Fase 3).
 - **Input:** Stack + estructura + skills instalados
 - **Output:** Makefile completo, configs lint/format/test, changelog tooling
 - **Criterio de done:** `make lint`, `make test`, `make build` OK
-- **Estado:** [ ]
+- **Estado:** [x]
 
 ### Paso 0.5: Pre-commit + CI/CD + versionado
 - **Requiere:** 0.4
