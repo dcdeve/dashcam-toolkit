@@ -3,7 +3,9 @@ STATUS.md
 .planning/
 
 # Claude Code - config local
-.claude/settings.local.json
+CLAUDE.md
+.claude/
+.mcp.json
 
 # Dependencies
 node_modules/
