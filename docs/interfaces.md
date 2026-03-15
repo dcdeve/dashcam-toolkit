@@ -48,5 +48,19 @@ consumidores: cli, ipc
 ## Diagrama
 TODO: Paso 1.3
 
+## Interfaces publicas (src/interfaces/)
+
+| Archivo | Tipos principales |
+|---------|-------------------|
+| db.ts | DatabaseConfig, MigrationResult, DbError, DbModule |
+| ffmpeg.ts | ProbeResult, SpawnOptions, FfmpegProgress, FfmpegError, FfmpegModule |
+| patterns.ts | Pattern, ParseResult, FormatOptions, PatternError, PatternsModule |
+| scanner.ts | ScanOptions, ScanResult, ScanProgress, ScannerError, ScannerModule |
+| trips.ts | Clip, Trip, GroupOptions, TripError, TripsModule |
+| exporter.ts | ExportOptions, ExportProgress, ExportTemplate, ExporterError, ExporterModule |
+| thumbnails.ts | ThumbnailConfig, ThumbnailEntry, ThumbnailError, ThumbnailsModule |
+| monitor.ts | WatchOptions, MonitorEvent, MonitorError, MonitorModule |
+| index.ts | Barrel re-export de todos los modulos |
+
 ## Contratos
-TODO: Con src/interfaces/
+TODO: Paso 1.4

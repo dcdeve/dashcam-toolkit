@@ -21,7 +21,7 @@ Orientado a robustez: tipos estrictos, error types, y tests de contrato.
 - **Input:** Lista de modulos
 - **Output:** src/interfaces/ (uno por modulo)
 - **Criterio de done:** Compila, tipos estrictos, error types definidos
-- **Estado:** [ ]
+- **Estado:** [x]
 
 ### Paso 1.3: Contratos entre modulos
 - **Requiere:** 1.2
