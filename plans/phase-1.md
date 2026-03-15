@@ -35,7 +35,7 @@ Orientado a robustez: tipos estrictos, error types, y tests de contrato.
 - **Input:** Interfaces
 - **Output:** tests/contracts/ con stubs
 - **Criterio de done:** `make test-contracts` pasa
-- **Estado:** [ ]
+- **Estado:** [x]
 
 ### Paso 1.5: Lock de interfaces
 - **Requiere:** 1.4

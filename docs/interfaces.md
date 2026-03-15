@@ -85,5 +85,19 @@ Sin dependencias circulares en ninguna capa.
 | monitor.ts | WatchOptions, MonitorEvent, MonitorError, MonitorModule |
 | index.ts | Barrel re-export de todos los modulos |
 
-## Contratos
-TODO: Paso 1.4
+## Contratos (tests/contracts/)
+
+Un test por modulo. Validan que las interfaces son implementables, shapes correctos, y error types completos.
+
+| Test | Tests | Valida |
+|------|-------|--------|
+| db.test.ts | 3 | DbModule methods, MigrationResult shape, errors |
+| ffmpeg.test.ts | 4 | FfmpegModule methods, ProbeResult shape, progress, errors |
+| patterns.test.ts | 4 | PatternsModule methods, Pattern/ParseResult shapes, errors |
+| scanner.test.ts | 4 | ScannerModule methods, ScanResult shape, phases, errors |
+| trips.test.ts | 4 | TripsModule methods, Trip/Clip shapes, status enums, errors |
+| exporter.test.ts | 5 | ExporterModule methods, output type, templates, phases, errors |
+| thumbnails.test.ts | 4 | ThumbnailsModule methods, entry/config shapes, errors |
+| monitor.test.ts | 5 | MonitorModule methods, event shape, event types, errors |
+
+Ejecutar: `make test-contracts`
