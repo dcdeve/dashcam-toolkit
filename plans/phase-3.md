@@ -20,7 +20,7 @@ Electron como shell visual sobre el core ya validado por CLI.
 - **Input:** Interfaces de ipc
 - **Output:** Bridge main↔renderer tipado
 - **Criterio de done:** Llamada IPC funcional de renderer a main
-- **Estado:** [ ]
+- **Estado:** [x]
 
 ### Paso 3.3: Import flow
 - **Input:** Scanner + patterns

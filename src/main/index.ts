@@ -1,8 +1,8 @@
 import { app, BrowserWindow } from 'electron';
 import { join } from 'path';
 
-// Verify core is accessible from main process
 import { VERSION } from '../core/index.js';
+import { registerAllHandlers } from './ipc/index.js';
 
 function createWindow(): void {
   const mainWindow = new BrowserWindow({
@@ -22,7 +22,8 @@ function createWindow(): void {
 }
 
 app.whenReady().then(() => {
-  console.log(`Dashcam Toolkit v${VERSION} — core accessible`);
+  console.log(`Dashcam Toolkit v${VERSION}`);
+  registerAllHandlers();
 
   createWindow();
 
