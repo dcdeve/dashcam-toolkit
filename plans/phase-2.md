@@ -26,7 +26,7 @@ CLI funcional como primera interfaz de usuario.
 - **Input:** Interfaces de patterns
 - **Output:** detectPattern() contra muestra, ~10 builtin patterns
 - **Criterio de done:** >90% deteccion en clips de fabricantes populares
-- **Estado:** [ ]
+- **Estado:** [x]
 
 ### Paso 2.4: scanner — Readdir recursivo + import
 - **Input:** Interfaces de scanner
