@@ -50,7 +50,7 @@ Electron como shell visual sobre el core ya validado por CLI.
 - **Input:** Clip seleccionado
 - **Output:** <video> estandar con controles
 - **Criterio de done:** Reproduce clip correctamente
-- **Estado:** [ ]
+- **Estado:** [x]
 
 ### Paso 3.8: Player — Modo viaje
 - **Input:** Trip con clips
