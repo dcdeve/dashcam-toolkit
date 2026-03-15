@@ -4,39 +4,94 @@ import { Library } from './pages/Library';
 
 type Page = 'home' | 'library' | 'import';
 
+const shellStyle: React.CSSProperties = {
+  fontFamily: "'SF Mono', 'Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace",
+  backgroundColor: '#0c0e12',
+  color: '#c9cdd4',
+  minHeight: '100vh',
+};
+
+const navStyle: React.CSSProperties = {
+  display: 'flex',
+  alignItems: 'center',
+  gap: '0',
+  padding: '0 1px',
+  backgroundColor: '#13161c',
+  borderBottom: '1px solid #1e2330',
+  height: '40px',
+  WebkitAppRegion: 'drag' as unknown as string,
+};
+
+const navBtnStyle = (active: boolean): React.CSSProperties => ({
+  height: '100%',
+  padding: '0 1.25rem',
+  border: 'none',
+  background: active ? '#0c0e12' : 'transparent',
+  color: active ? '#e2e5eb' : '#5a6175',
+  cursor: 'pointer',
+  fontSize: '0.75rem',
+  fontFamily: 'inherit',
+  fontWeight: 500,
+  letterSpacing: '0.05em',
+  textTransform: 'uppercase',
+  borderTop: active ? '2px solid #3b82f6' : '2px solid transparent',
+  transition: 'color 0.15s, background 0.15s',
+  WebkitAppRegion: 'no-drag' as unknown as string,
+});
+
+const homeStyle: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  justifyContent: 'center',
+  height: 'calc(100vh - 41px)',
+  gap: '0.75rem',
+};
+
+const logoStyle: React.CSSProperties = {
+  fontSize: '1.1rem',
+  fontWeight: 600,
+  letterSpacing: '0.12em',
+  textTransform: 'uppercase',
+  color: '#e2e5eb',
+};
+
+const platformStyle: React.CSSProperties = {
+  fontSize: '0.7rem',
+  color: '#3b4559',
+  letterSpacing: '0.08em',
+  textTransform: 'uppercase',
+};
+
 export function App(): React.ReactElement {
   const [page, setPage] = useState<Page>('home');
 
   return (
-    <div style={{ fontFamily: 'system-ui, sans-serif' }}>
-      <nav style={{ padding: '1rem 2rem', borderBottom: '1px solid #e5e7eb' }}>
-        <button
-          onClick={() => setPage('home')}
-          type="button"
-          style={{ marginRight: '1rem', fontWeight: page === 'home' ? 'bold' : 'normal' }}
-        >
+    <div style={shellStyle}>
+      <nav style={navStyle}>
+        <button onClick={() => setPage('home')} type="button" style={navBtnStyle(page === 'home')}>
           Home
         </button>
         <button
           onClick={() => setPage('library')}
           type="button"
-          style={{ marginRight: '1rem', fontWeight: page === 'library' ? 'bold' : 'normal' }}
+          style={navBtnStyle(page === 'library')}
         >
           Library
         </button>
         <button
           onClick={() => setPage('import')}
           type="button"
-          style={{ fontWeight: page === 'import' ? 'bold' : 'normal' }}
+          style={navBtnStyle(page === 'import')}
         >
           Import
         </button>
       </nav>
 
       {page === 'home' && (
-        <div style={{ padding: '2rem' }}>
-          <h1>Dashcam Toolkit</h1>
-          <p>Platform: {window.api.platform}</p>
+        <div style={homeStyle}>
+          <span style={logoStyle}>Dashcam Toolkit</span>
+          <span style={platformStyle}>{window.api.platform}</span>
         </div>
       )}
 
