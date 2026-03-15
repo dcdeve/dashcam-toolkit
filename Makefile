@@ -26,7 +26,8 @@ dev-cli: ## Compilar CLI en watch mode
 
 .PHONY: start
 start: ## Abrir Electron app compilada (produccion local)
-	npx electron .
+	nohup npx electron . > /dev/null 2>&1 &
+	@echo "App launched (PID $$!)"
 
 .PHONY: cli
 cli: ## Correr CLI compilado (make cli args="scan /ruta")
