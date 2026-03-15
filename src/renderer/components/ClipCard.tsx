@@ -79,7 +79,12 @@ const metaStyle: React.CSSProperties = {
   fontVariantNumeric: 'tabular-nums',
 };
 
-export function ClipCard({ clip }: { clip: Clip }): React.ReactElement {
+interface ClipCardProps {
+  clip: Clip;
+  onClick?: () => void;
+}
+
+export function ClipCard({ clip, onClick }: ClipCardProps): React.ReactElement {
   const [hovered, setHovered] = useState(false);
 
   return (
@@ -87,6 +92,7 @@ export function ClipCard({ clip }: { clip: Clip }): React.ReactElement {
       style={cardStyle(hovered)}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
+      onClick={onClick}
     >
       <div style={thumbStyle}>
         <div style={playIconStyle}>&#9654;</div>

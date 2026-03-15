@@ -98,6 +98,7 @@ interface ClipTableProps {
   sortField: SortField;
   sortDir: SortDir;
   onSort: (field: SortField) => void;
+  onPlay?: (clip: Clip) => void;
 }
 
 export function ClipTable({
@@ -105,6 +106,7 @@ export function ClipTable({
   sortField,
   sortDir,
   onSort,
+  onPlay,
 }: ClipTableProps): React.ReactElement {
   if (clips.length === 0) {
     return <p style={emptyStyle}>No clips found. Import a dashcam folder first.</p>;
@@ -132,7 +134,7 @@ export function ClipTable({
       </thead>
       <tbody>
         {clips.map((clip, i) => (
-          <tr key={clip.id} style={trStyle(i % 2 === 0)}>
+          <tr key={clip.id} style={trStyle(i % 2 === 0)} onClick={() => onPlay?.(clip)}>
             <td style={filenameTdStyle} title={clip.filename}>
               {clip.filename}
             </td>

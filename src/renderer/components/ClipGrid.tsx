@@ -14,7 +14,12 @@ const emptyStyle: React.CSSProperties = {
   padding: '3rem 0',
 };
 
-export function ClipGrid({ clips }: { clips: Clip[] }): React.ReactElement {
+interface ClipGridProps {
+  clips: Clip[];
+  onPlay?: (clip: Clip) => void;
+}
+
+export function ClipGrid({ clips, onPlay }: ClipGridProps): React.ReactElement {
   if (clips.length === 0) {
     return <p style={emptyStyle}>No clips found. Import a dashcam folder first.</p>;
   }
@@ -22,7 +27,7 @@ export function ClipGrid({ clips }: { clips: Clip[] }): React.ReactElement {
   return (
     <div style={gridStyle}>
       {clips.map((clip) => (
-        <ClipCard key={clip.id} clip={clip} />
+        <ClipCard key={clip.id} clip={clip} onClick={() => onPlay?.(clip)} />
       ))}
     </div>
   );

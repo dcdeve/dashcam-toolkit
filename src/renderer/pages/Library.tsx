@@ -136,7 +136,11 @@ const errorStyle: React.CSSProperties = {
   fontSize: '0.8rem',
 };
 
-export function Library(): React.ReactElement {
+interface LibraryProps {
+  onPlayClip?: (clip: Clip) => void;
+}
+
+export function Library({ onPlayClip }: LibraryProps): React.ReactElement {
   const [tab, setTab] = useState<LibraryTab>(() => getStored('library-tab', 'clips'));
   const [viewMode, setViewMode] = useState<ViewMode>(() => getStored('library-view-mode', 'list'));
 
@@ -280,9 +284,10 @@ export function Library(): React.ReactElement {
             sortField={clipSortField}
             sortDir={clipSortDir}
             onSort={handleClipSort}
+            onPlay={onPlayClip}
           />
         ) : (
-          <ClipGrid clips={sortedClips} />
+          <ClipGrid clips={sortedClips} onPlay={onPlayClip} />
         ))}
 
       {tab === 'trips' &&

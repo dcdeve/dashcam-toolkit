@@ -1,8 +1,10 @@
 import { useState } from 'react';
 import { ImportFlow } from './pages/ImportFlow';
 import { Library } from './pages/Library';
+import { Player } from './pages/Player';
+import type { Clip } from '../interfaces/trips.js';
 
-type Page = 'home' | 'library' | 'import';
+type Page = 'home' | 'library' | 'import' | 'player';
 
 const shellStyle: React.CSSProperties = {
   fontFamily: "'SF Mono', 'Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace",
@@ -65,6 +67,12 @@ const platformStyle: React.CSSProperties = {
 
 export function App(): React.ReactElement {
   const [page, setPage] = useState<Page>('home');
+  const [selectedClip, setSelectedClip] = useState<Clip | null>(null);
+
+  const handlePlayClip = (clip: Clip): void => {
+    setSelectedClip(clip);
+    setPage('player');
+  };
 
   return (
     <div style={shellStyle}>
@@ -95,9 +103,13 @@ export function App(): React.ReactElement {
         </div>
       )}
 
-      {page === 'library' && <Library />}
+      {page === 'library' && <Library onPlayClip={handlePlayClip} />}
 
       {page === 'import' && <ImportFlow onDone={() => setPage('library')} />}
+
+      {page === 'player' && selectedClip && (
+        <Player clip={selectedClip} onBack={() => setPage('library')} />
+      )}
     </div>
   );
 }

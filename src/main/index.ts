@@ -1,7 +1,8 @@
-import { app, BrowserWindow } from 'electron';
+import { app, BrowserWindow, protocol, net } from 'electron';
 import { join } from 'path';
 import { homedir } from 'os';
 import { mkdirSync } from 'fs';
+import { pathToFileURL } from 'url';
 
 import { VERSION } from '../core/index.js';
 import { db } from '../core/modules/db/index.js';
@@ -36,7 +37,20 @@ function createWindow(): void {
   }
 }
 
+// Register custom protocol for serving local video/image files
+protocol.registerSchemesAsPrivileged([
+  {
+    scheme: 'dashcam-file',
+    privileges: { standard: false, secure: true, supportFetchAPI: true, stream: true },
+  },
+]);
+
 app.whenReady().then(async () => {
+  // Handle dashcam-file:// protocol — serves local files securely
+  protocol.handle('dashcam-file', (request) => {
+    const filePath = decodeURIComponent(request.url.replace('dashcam-file://', ''));
+    return net.fetch(pathToFileURL(filePath).href);
+  });
   console.log(`Dashcam Toolkit v${VERSION}`);
 
   // Install React DevTools in dev mode
