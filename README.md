@@ -25,7 +25,7 @@ Core puro Node.js consumido por CLI (power users) y UI grafica (usuarios no-tecn
 ## Inicio rapido
 
 ```bash
-git clone <repo-url>
+git clone https://github.com/dcdeve/dashcam-toolkit.git
 cd dashcam-toolkit
 make setup    # Instala deps, rebuild native, compila todo
 ```
