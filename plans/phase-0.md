@@ -50,7 +50,7 @@ Scaffold como proyecto Node.js + TS puro (Electron se agrega en Fase 3).
 - **Input:** Todo lo anterior
 - **Output:** CLAUDE.md, rules, commands, agents ajustados al stack real
 - **Criterio de done:** /next-step funciona correctamente
-- **Estado:** [ ]
+- **Estado:** [x]
 
 ## Gate
 - [ ] `make check` pasa

@@ -1,7 +1,17 @@
 # dashcam-toolkit
 
 ## Stack
-TODO: Fase 0
+- **Runtime:** Node.js + TypeScript (ES2022, Node16 modules)
+- **CLI:** Commander.js v14 + @commander-js/extra-typings
+- **DB:** SQLite (better-sqlite3 + Drizzle ORM)
+- **FFmpeg:** ffmpeg-static, child_process.spawn directo
+- **Test:** Vitest
+- **Lint:** ESLint v10 + typescript-eslint (strict)
+- **Format:** Prettier
+- **Pre-commit:** Husky v9
+- **CI:** GitHub Actions (make check en push/PR)
+- **Changelog:** changelogen (conventional commits)
+- **Build:** tsc (futuro: electron-vite + electron-builder)
 
 ## Reglas
 - Leer STATUS.md antes de cualquier cosa
