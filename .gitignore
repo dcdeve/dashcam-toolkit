@@ -1,6 +1,13 @@
-# claude-pw - session state (personal)
+# claude-pw - session state and build planning (personal)
 STATUS.md
+PLAN.md
+plans/
 .planning/
+docs/tooling.md
+docs/codebase-map.md
+docs/conventions.md
+docs/tech-debt.md
+docs/research/
 
 # Claude Code - config local
 CLAUDE.md
