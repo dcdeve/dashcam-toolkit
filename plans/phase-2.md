@@ -20,7 +20,7 @@ CLI funcional como primera interfaz de usuario.
 - **Input:** Interfaces de ffmpeg
 - **Output:** Modulo con detect, probe(), spawn con progress
 - **Criterio de done:** Probe funciona con clip real
-- **Estado:** [ ]
+- **Estado:** [x]
 
 ### Paso 2.3: patterns — Parse/format con date-fns
 - **Input:** Interfaces de patterns
