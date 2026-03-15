@@ -18,12 +18,26 @@
 | /spike | Exploracion tecnica aislada (resultado es info, no codigo) |
 | /interface-check | Verificar consistencia de interfaces |
 | /startup | Sesion de discovery: entrevistar al usuario y generar plan |
+| /debug | Debug persistente: sesiones que sobreviven context resets |
+| /quick | Tarea rapida sin pipeline completo, para ad-hoc que no afectan el plan |
+| /reflect | Revisar correcciones capturadas y convertirlas en aprendizajes |
+| /health | Health check del proyecto: verificar y opcionalmente reparar estado |
+| /map-codebase | Analizar codebase existente y producir documentacion estructurada |
 
 ## Custom Agents (.claude/agents/)
 
 | Agente | Uso |
 |--------|-----|
 | session-recovery | Health check al inicio de sesion, detecta estado inconsistente |
+| plan-checker | Status del proyecto sin contaminar contexto |
+| decision-impact | Impacto de decision en todo el plan |
+| spike-explorer | Exploracion tecnica aislada, prueba codigo y reporta viabilidad |
+| researcher | Pre-planning research, investiga unknowns antes de disenar |
+| debugger | Debug estructurado con metodo cientifico, persiste entre sesiones |
+| interface-reviewer | Consistencia de interfaces |
+| codebase-mapper | Analiza codebase existente y produce documentacion estructurada |
+| phase-validator | Valida fase completa: docs, codigo, gate |
+| learning-extractor | Analiza correcciones de sesion y extrae aprendizajes accionables |
 
 ## Evaluados y descartados
 
