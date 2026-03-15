@@ -18,6 +18,8 @@ TODO: Fase 0
 - Tareas ad-hoc que no afectan el plan -> /quick
 - Debug que puede tomar varias sesiones -> /debug (persiste estado)
 - Si algo parece roto o inconsistente -> /health
+- Si el usuario te corrige, captura la correccion en .planning/learnings/queue.md
+- Al final de sesiones largas, sugerir /reflect para procesar aprendizajes
 
 ## Estructura
 - STATUS.md -- Puntero. Leer primero.

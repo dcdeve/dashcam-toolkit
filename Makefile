@@ -32,9 +32,13 @@ format: ## Format con prettier
 format-check: ## Verificar formato
 	npx prettier --check 'src/**/*.ts'
 
+.PHONY: typecheck
+typecheck: ## Verificar tipos sin emitir
+	npx tsc --noEmit
+
 .PHONY: test-contracts
 test-contracts: ## Correr tests de contrato
-	npx vitest run tests/contracts/
+	npx vitest run tests/contracts/ --passWithNoTests
 
 .PHONY: check
 check: lint format-check build test ## Validacion completa
@@ -46,6 +50,10 @@ clean: ## Borrar dist/
 .PHONY: changelog
 changelog: ## Generar CHANGELOG.md desde commits
 	npx changelogen --output CHANGELOG.md
+
+.PHONY: release
+release: ## Bump version + changelog (make release t="patch|minor|major")
+	npx changelogen --release --push --$(t)
 
 .PHONY: status
 status: ## Mostrar estado actual

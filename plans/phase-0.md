@@ -43,7 +43,7 @@ Scaffold como proyecto Node.js + TS puro (Electron se agrega en Fase 3).
 - **Input:** Toolchain configurada
 - **Output:** Pre-commit hook, pipeline CI, semver
 - **Criterio de done:** Pre-commit bloquea commits rotos, CI corre en push
-- **Estado:** [ ]
+- **Estado:** [x]
 
 ### Paso 0.6: Setup Claude Code
 - **Requiere:** 0.5
