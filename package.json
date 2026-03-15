@@ -53,6 +53,7 @@
     "changelogen": "^0.6.2",
     "drizzle-kit": "^0.31.9",
     "electron": "^41.0.2",
+    "electron-devtools-installer": "^4.0.0",
     "electron-vite": "^5.0.0",
     "eslint": "^10.0.3",
     "husky": "^9.1.7",

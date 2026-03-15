@@ -35,8 +35,17 @@ function createWindow(): void {
   }
 }
 
-app.whenReady().then(() => {
+app.whenReady().then(async () => {
   console.log(`Dashcam Toolkit v${VERSION}`);
+
+  // Install React DevTools in dev mode
+  if (!app.isPackaged) {
+    const { default: installExtension, REACT_DEVELOPER_TOOLS } =
+      await import('electron-devtools-installer');
+    await installExtension(REACT_DEVELOPER_TOOLS).catch((err: unknown) =>
+      console.warn('React DevTools install failed:', err),
+    );
+  }
 
   // Auto-initialize database
   const dbPath = getDbPath();
