@@ -1,317 +1,217 @@
-import { useState, useEffect, useCallback } from 'react';
-import type { Clip, Trip } from '../../interfaces/trips.js';
-import { ClipTable, type SortField as ClipSortField, type SortDir } from '../components/ClipTable';
-import { ClipGrid } from '../components/ClipGrid';
-import { TripTable, type TripSortField } from '../components/TripTable';
-import { TripGrid } from '../components/TripGrid';
+import { useMemo } from 'react';
+import { FolderSearch, Grid, List, Video } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
+import { Separator } from '@/components/ui/separator';
+import { TopBar } from '@/components/TopBar';
+import { TripCard } from '@/components/TripCard';
+import { useAppStore, type SortOption, type LibraryTab } from '@/store';
+import { ClipTable } from '@/components/ClipTable';
+import { ClipGrid } from '@/components/ClipGrid';
+import type { Clip } from '../../interfaces/trips.js';
 
-type ViewMode = 'list' | 'grid';
-type LibraryTab = 'clips' | 'trips';
+export function Library(): React.ReactElement {
+  const {
+    trips,
+    clips,
+    viewMode,
+    setViewMode,
+    activeTab,
+    setActiveTab,
+    sortOption,
+    setSortOption,
+    searchQuery,
+    isLoading,
+    error,
+    isImportOpen,
+    openImportDrawer,
+  } = useAppStore();
 
-function getStored<T extends string>(key: string, fallback: T): T {
-  return (localStorage.getItem(key) as T) ?? fallback;
-}
+  async function handleScanFolder(): Promise<void> {
+    const dir = await window.api.dialog.openDirectory();
+    if (dir) openImportDrawer(dir);
+  }
 
-function sortClips(clips: Clip[], field: ClipSortField, dir: SortDir): Clip[] {
-  const sorted = [...clips];
-  const mul = dir === 'asc' ? 1 : -1;
-
-  sorted.sort((a, b) => {
-    switch (field) {
-      case 'filename':
-        return mul * a.filename.localeCompare(b.filename);
-      case 'timestampSource':
-        return mul * (a.timestampSource.getTime() - b.timestampSource.getTime());
+  const filteredTrips = useMemo(() => {
+    let result = [...trips];
+    if (searchQuery) {
+      const q = searchQuery.toLowerCase();
+      result = result.filter(
+        (t) =>
+          t.name.toLowerCase().includes(q) ||
+          t.date.includes(q) ||
+          t.folderPath.toLowerCase().includes(q),
+      );
+    }
+    switch (sortOption) {
+      case 'date-desc':
+        result.sort((a, b) => b.date.localeCompare(a.date));
+        break;
+      case 'date-asc':
+        result.sort((a, b) => a.date.localeCompare(b.date));
+        break;
       case 'duration':
-        return mul * (a.duration - b.duration);
-      case 'resolution':
-        return mul * (a.width * a.height - b.width * b.height);
-      case 'size':
-        return mul * (a.size - b.size);
-    }
-  });
-
-  return sorted;
-}
-
-function sortTrips(trips: Trip[], field: TripSortField, dir: SortDir): Trip[] {
-  const sorted = [...trips];
-  const mul = dir === 'asc' ? 1 : -1;
-
-  sorted.sort((a, b) => {
-    switch (field) {
+        result.sort((a, b) => b.duration - a.duration);
+        break;
       case 'name':
-        return mul * a.name.localeCompare(b.name);
-      case 'startedAt':
-        return mul * (a.startedAt.getTime() - b.startedAt.getTime());
-      case 'clipCount':
-        return mul * (a.clipCount - b.clipCount);
-      case 'totalDuration':
-        return mul * (a.totalDuration - b.totalDuration);
-      case 'codecCompat':
-        return mul * a.codecCompat.localeCompare(b.codecCompat);
+        result.sort((a, b) => a.name.localeCompare(b.name));
+        break;
     }
-  });
+    return result;
+  }, [trips, searchQuery, sortOption]);
 
-  return sorted;
-}
+  const filteredClips = useMemo(() => {
+    if (!searchQuery) return clips;
+    const q = searchQuery.toLowerCase();
+    return clips.filter((c) => c.filename.toLowerCase().includes(q));
+  }, [clips, searchQuery]);
 
-const containerStyle: React.CSSProperties = {
-  padding: '20px 24px',
-};
+  if (isLoading) {
+    return (
+      <div className="flex h-full items-center justify-center">
+        <span className="text-sm text-muted-foreground">Loading library...</span>
+      </div>
+    );
+  }
 
-const headerStyle: React.CSSProperties = {
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'space-between',
-  marginBottom: '16px',
-};
+  if (error) {
+    return (
+      <div className="flex h-full items-center justify-center p-8">
+        <span className="text-sm text-destructive">Error: {error}</span>
+      </div>
+    );
+  }
 
-const tabBarStyle: React.CSSProperties = {
-  display: 'flex',
-  gap: '0',
-};
-
-const tabStyle = (active: boolean): React.CSSProperties => ({
-  padding: '6px 16px',
-  border: 'none',
-  background: active ? '#1e2330' : 'transparent',
-  color: active ? '#e2e5eb' : '#5a6175',
-  cursor: 'pointer',
-  fontSize: '0.72rem',
-  fontFamily: 'inherit',
-  fontWeight: 500,
-  letterSpacing: '0.05em',
-  textTransform: 'uppercase',
-  borderRadius: '4px',
-  transition: 'color 0.15s, background 0.15s',
-});
-
-const controlsStyle: React.CSSProperties = {
-  display: 'flex',
-  alignItems: 'center',
-  gap: '12px',
-};
-
-const countStyle: React.CSSProperties = {
-  fontSize: '0.7rem',
-  color: '#3b4559',
-  fontVariantNumeric: 'tabular-nums',
-};
-
-const toggleGroupStyle: React.CSSProperties = {
-  display: 'flex',
-  border: '1px solid #1e2330',
-  borderRadius: '4px',
-  overflow: 'hidden',
-};
-
-const toggleBtnStyle = (active: boolean): React.CSSProperties => ({
-  padding: '4px 10px',
-  border: 'none',
-  background: active ? '#1e2330' : 'transparent',
-  color: active ? '#c9cdd4' : '#3b4559',
-  cursor: 'pointer',
-  fontSize: '0.65rem',
-  fontFamily: 'inherit',
-  fontWeight: 500,
-  letterSpacing: '0.05em',
-  textTransform: 'uppercase',
-  transition: 'color 0.15s, background 0.15s',
-});
-
-const loadingStyle: React.CSSProperties = {
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  height: '200px',
-  color: '#3b4559',
-  fontSize: '0.8rem',
-  letterSpacing: '0.05em',
-};
-
-const errorStyle: React.CSSProperties = {
-  padding: '2rem',
-  color: '#f87171',
-  fontSize: '0.8rem',
-};
-
-interface LibraryProps {
-  onPlayClip?: (clip: Clip) => void;
-  onPlayTrip?: (trip: Trip) => void;
-  onExportTrip?: (tripId: string) => void;
-  onExportClip?: (clip: Clip) => void;
-}
-
-export function Library({
-  onPlayClip,
-  onPlayTrip,
-  onExportTrip,
-  onExportClip,
-}: LibraryProps): React.ReactElement {
-  const [tab, setTab] = useState<LibraryTab>(() => getStored('library-tab', 'clips'));
-  const [viewMode, setViewMode] = useState<ViewMode>(() => getStored('library-view-mode', 'list'));
-
-  const [clips, setClips] = useState<Clip[]>([]);
-  const [clipsLoading, setClipsLoading] = useState(true);
-  const [clipSortField, setClipSortField] = useState<ClipSortField>('timestampSource');
-  const [clipSortDir, setClipSortDir] = useState<SortDir>('desc');
-
-  const [trips, setTrips] = useState<Trip[]>([]);
-  const [tripsLoading, setTripsLoading] = useState(true);
-  const [tripSortField, setTripSortField] = useState<TripSortField>('startedAt');
-  const [tripSortDir, setTripSortDir] = useState<SortDir>('desc');
-
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    (async () => {
-      try {
-        const result = await window.api.clips.list();
-        const hydrated = result.map((c: Clip) => ({
-          ...c,
-          timestampSource: new Date(c.timestampSource),
-          createdAt: new Date(c.createdAt),
-        }));
-        setClips(hydrated);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : String(err));
-      } finally {
-        setClipsLoading(false);
-      }
-    })();
-  }, []);
-
-  useEffect(() => {
-    (async () => {
-      try {
-        const result = await window.api.trips.list();
-        const hydrated = result.map((t: Trip) => ({
-          ...t,
-          startedAt: new Date(t.startedAt),
-          endedAt: new Date(t.endedAt),
-          createdAt: new Date(t.createdAt),
-        }));
-        setTrips(hydrated);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : String(err));
-      } finally {
-        setTripsLoading(false);
-      }
-    })();
-  }, []);
-
-  const handleTab = useCallback((t: LibraryTab) => {
-    setTab(t);
-    localStorage.setItem('library-tab', t);
-  }, []);
-
-  const handleViewMode = useCallback((mode: ViewMode) => {
-    setViewMode(mode);
-    localStorage.setItem('library-view-mode', mode);
-  }, []);
-
-  const handleClipSort = useCallback(
-    (field: ClipSortField) => {
-      if (field === clipSortField) {
-        setClipSortDir((d) => (d === 'asc' ? 'desc' : 'asc'));
-      } else {
-        setClipSortField(field);
-        setClipSortDir('asc');
-      }
-    },
-    [clipSortField],
-  );
-
-  const handleTripSort = useCallback(
-    (field: TripSortField) => {
-      if (field === tripSortField) {
-        setTripSortDir((d) => (d === 'asc' ? 'desc' : 'asc'));
-      } else {
-        setTripSortField(field);
-        setTripSortDir('asc');
-      }
-    },
-    [tripSortField],
-  );
-
-  const loading = tab === 'clips' ? clipsLoading : tripsLoading;
-
-  if (loading) return <div style={loadingStyle}>Loading...</div>;
-  if (error) return <div style={errorStyle}>Error: {error}</div>;
-
-  const sortedClips = sortClips(clips, clipSortField, clipSortDir);
-  const sortedTrips = sortTrips(trips, tripSortField, tripSortDir);
-  const count = tab === 'clips' ? clips.length : trips.length;
+  const isEmpty = trips.length === 0 && clips.length === 0;
 
   return (
-    <div style={containerStyle}>
-      <div style={headerStyle}>
-        <div style={tabBarStyle}>
-          <button
-            type="button"
-            style={tabStyle(tab === 'clips')}
-            onClick={() => handleTab('clips')}
-          >
-            Clips
-          </button>
-          <button
-            type="button"
-            style={tabStyle(tab === 'trips')}
-            onClick={() => handleTab('trips')}
-          >
-            Trips
-          </button>
-        </div>
+    <div className="flex h-full flex-col w-full">
+      <TopBar />
 
-        <div style={controlsStyle}>
-          <span style={countStyle}>{count}</span>
-          <div style={toggleGroupStyle}>
-            <button
-              type="button"
-              style={toggleBtnStyle(viewMode === 'list')}
-              onClick={() => handleViewMode('list')}
-            >
-              List
-            </button>
-            <button
-              type="button"
-              style={toggleBtnStyle(viewMode === 'grid')}
-              onClick={() => handleViewMode('grid')}
-            >
-              Grid
-            </button>
-          </div>
-        </div>
+      {/* Tab bar */}
+      <div className="flex border-b border-border bg-card px-4">
+        {(['trips', 'clips'] as LibraryTab[]).map((tab) => (
+          <button
+            key={tab}
+            type="button"
+            onClick={() => setActiveTab(tab)}
+            className={`px-4 py-2 text-sm font-medium capitalize transition-colors border-b-2 ${
+              activeTab === tab
+                ? 'border-primary text-foreground'
+                : 'border-transparent text-muted-foreground hover:text-foreground'
+            }`}
+          >
+            {tab}
+          </button>
+        ))}
       </div>
 
-      {tab === 'clips' &&
-        (viewMode === 'list' ? (
-          <ClipTable
-            clips={sortedClips}
-            sortField={clipSortField}
-            sortDir={clipSortDir}
-            onSort={handleClipSort}
-            onPlay={onPlayClip}
-            onExport={onExportClip}
-          />
-        ) : (
-          <ClipGrid clips={sortedClips} onPlay={onPlayClip} />
-        ))}
+      {/* Toolbar */}
+      <div className="flex items-center gap-3 border-b border-border bg-card px-4 py-2">
+        <Button
+          variant="secondary"
+          size="sm"
+          className="gap-2"
+          onClick={handleScanFolder}
+          disabled={isImportOpen}
+        >
+          <FolderSearch className="h-4 w-4" />
+          Scan folder
+        </Button>
+        <Separator orientation="vertical" className="h-6" />
+        <ToggleGroup
+          type="single"
+          value={viewMode}
+          onValueChange={(v) => v && setViewMode(v as 'grid' | 'list')}
+          className="gap-0"
+        >
+          <ToggleGroupItem
+            value="grid"
+            size="sm"
+            className="rounded-r-none border border-border data-[state=on]:bg-secondary"
+          >
+            <Grid className="h-4 w-4" />
+          </ToggleGroupItem>
+          <ToggleGroupItem
+            value="list"
+            size="sm"
+            className="rounded-l-none border border-l-0 border-border data-[state=on]:bg-secondary"
+          >
+            <List className="h-4 w-4" />
+          </ToggleGroupItem>
+        </ToggleGroup>
+        {activeTab === 'trips' && (
+          <Select value={sortOption} onValueChange={(v) => setSortOption(v as SortOption)}>
+            <SelectTrigger className="w-40 h-8 bg-secondary border-border">
+              <SelectValue placeholder="Sort by..." />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="date-desc">Date (newest)</SelectItem>
+              <SelectItem value="date-asc">Date (oldest)</SelectItem>
+              <SelectItem value="duration">Duration</SelectItem>
+              <SelectItem value="name">Name</SelectItem>
+            </SelectContent>
+          </Select>
+        )}
+        <span className="ml-auto text-sm text-muted-foreground">
+          {activeTab === 'trips' ? filteredTrips.length : filteredClips.length} {activeTab}
+        </span>
+      </div>
 
-      {tab === 'trips' &&
-        (viewMode === 'list' ? (
-          <TripTable
-            trips={sortedTrips}
-            sortField={tripSortField}
-            sortDir={tripSortDir}
-            onSort={handleTripSort}
-            onPlay={onPlayTrip}
-            onExport={onExportTrip ? (tripId: string) => onExportTrip(tripId) : undefined}
-          />
-        ) : (
-          <TripGrid trips={sortedTrips} onPlay={onPlayTrip} />
-        ))}
+      {/* Content */}
+      {isEmpty ? (
+        <div className="flex flex-1 flex-col items-center justify-center gap-4 p-8">
+          <div className="flex h-24 w-24 items-center justify-center rounded-full bg-secondary">
+            <Video className="h-12 w-12 text-muted-foreground" />
+          </div>
+          <div className="text-center">
+            <h2 className="text-lg font-medium text-foreground">No trips yet</h2>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Scan a folder to import your dashcam footage
+            </p>
+          </div>
+          <Button className="mt-2 gap-2" onClick={handleScanFolder} disabled={isImportOpen}>
+            <FolderSearch className="h-4 w-4" />
+            Scan folder
+          </Button>
+        </div>
+      ) : (
+        <div className="flex-1 overflow-auto p-4">
+          {activeTab === 'trips' &&
+            (viewMode === 'grid' ? (
+              <div className="grid grid-cols-2 gap-4 lg:grid-cols-3 xl:grid-cols-4">
+                {filteredTrips.map((trip) => (
+                  <TripCard key={trip.id} trip={trip} viewMode="grid" />
+                ))}
+              </div>
+            ) : (
+              <div className="flex flex-col gap-2">
+                {filteredTrips.map((trip) => (
+                  <TripCard key={trip.id} trip={trip} viewMode="list" />
+                ))}
+              </div>
+            ))}
+
+          {activeTab === 'clips' &&
+            (viewMode === 'list' ? (
+              <ClipTable
+                clips={filteredClips as unknown as Clip[]}
+                sortField="timestampSource"
+                sortDir="desc"
+                onSort={() => {}}
+              />
+            ) : (
+              <ClipGrid clips={filteredClips as unknown as Clip[]} />
+            ))}
+        </div>
+      )}
     </div>
   );
 }
