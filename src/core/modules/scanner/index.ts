@@ -16,6 +16,7 @@ import type {
   ScannerError,
 } from '../../../interfaces/scanner.js';
 import type { Clip } from '../../../interfaces/trips.js';
+import { folders as foldersModule } from '../folders/index.js';
 
 export class ScannerModuleError extends Error {
   constructor(
@@ -259,10 +260,11 @@ export const scanner: ScannerModule = {
         onProgress?.({ phase: 'importing', current: i + 1, total: clips.length });
       }
     } else {
-      // Fresh import — insert all
+      // Fresh import — skip clips that already exist (path is unique)
       for (let i = 0; i < clips.length; i++) {
         const clip = clips[i];
-        db.insert(schema.clips)
+        const result = db
+          .insert(schema.clips)
           .values({
             id: crypto.randomUUID(),
             path: clip.path,
@@ -276,10 +278,22 @@ export const scanner: ScannerModule = {
             fileSize: clip.size,
             createdAt: Date.now(),
           })
+          .onConflictDoNothing()
           .run();
-        clipsNew++;
+        if (result.changes > 0) clipsNew++;
         onProgress?.({ phase: 'importing', current: i + 1, total: clips.length });
       }
+    }
+
+    // Upsert folder record after importing (before grouping)
+    try {
+      const filesForFolder = clips.map((c) => ({
+        name: basename(c.path),
+        size: c.size,
+      }));
+      foldersModule.upsertAfterScan(dir, filesForFolder);
+    } catch {
+      // Non-fatal: folder record upsert failure should not abort the scan
     }
 
     // Phase: grouping

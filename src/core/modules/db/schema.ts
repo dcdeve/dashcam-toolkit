@@ -66,3 +66,18 @@ export const settings = sqliteTable('settings', {
   key: text('key').primaryKey(),
   value: text('value').notNull(),
 });
+
+export const scannedFolders = sqliteTable(
+  'scanned_folders',
+  {
+    id: text('id').primaryKey(),
+    path: text('path').notNull(),
+    lastScanAt: integer('last_scan_at').notNull(),
+    clipCountAtScan: integer('clip_count_at_scan').notNull(),
+    filesHashAtScan: text('files_hash_at_scan').notNull(),
+    createdAt: integer('created_at')
+      .notNull()
+      .$defaultFn(() => Date.now()),
+  },
+  (table) => [uniqueIndex('scanned_folders_path_idx').on(table.path)],
+);

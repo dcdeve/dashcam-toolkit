@@ -45,4 +45,9 @@ export const IPC = {
     GET_SCRUB: 'thumbnails:getScrub',
     CLEAR_CACHE: 'thumbnails:clearCache',
   },
+  FOLDERS: {
+    LIST: 'folders:list',
+    HEALTH_CHECK: 'folders:healthCheck',
+    REMOVE: 'folders:remove',
+  },
 } as const;

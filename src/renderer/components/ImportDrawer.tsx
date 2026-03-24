@@ -9,15 +9,26 @@ import { importReducer } from './importReducer.js';
 // ─── Component ────────────────────────────────────────────────────────────────
 
 export function ImportDrawer(): React.ReactElement | null {
-  const { isImportOpen, importInitialDir, closeImportDrawer, refresh } = useAppStore();
+  const {
+    isImportOpen,
+    importInitialDir,
+    importRescanMode,
+    closeImportDrawer,
+    refresh,
+    runHealthChecks,
+  } = useAppStore();
   const [state, dispatch] = useReducer(importReducer, { step: 'idle' });
 
   // Seed reducer when drawer opens with a selected directory
   useEffect(() => {
     if (isImportOpen && importInitialDir) {
-      dispatch({ type: 'SELECT_DIR', dir: importInitialDir });
+      if (importRescanMode) {
+        dispatch({ type: 'RESCAN_DIR', dir: importInitialDir });
+      } else {
+        dispatch({ type: 'SELECT_DIR', dir: importInitialDir });
+      }
     }
-  }, [isImportOpen, importInitialDir]);
+  }, [isImportOpen, importInitialDir, importRescanMode]);
 
   // Auto-detect pattern when in detecting step
   useEffect(() => {
@@ -75,6 +86,9 @@ export function ImportDrawer(): React.ReactElement | null {
 
   function handleDone(): void {
     refresh();
+    if (importRescanMode) {
+      runHealthChecks();
+    }
     closeImportDrawer();
   }
 

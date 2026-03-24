@@ -3,6 +3,7 @@ import { format } from 'date-fns';
 import type { Trip, Clip } from '../interfaces/trips.js';
 import type { Pattern } from '../interfaces/patterns.js';
 import type { ThumbnailEntry } from '../interfaces/thumbnails.js';
+import type { FolderHealthStatus, ScannedFolder } from '../interfaces/folders.js';
 
 // ─── UI View-Models ─────────────────────────────────────────────────────────
 
@@ -44,6 +45,24 @@ export type ViewMode = 'grid' | 'list';
 export type LibraryTab = 'trips' | 'clips';
 export type SortOption = 'date-desc' | 'date-asc' | 'duration' | 'name';
 export type Page = 'library' | 'player' | 'settings';
+
+export type FolderSortOption =
+  | 'health-stale-first'
+  | 'name-asc'
+  | 'last-scanned-desc'
+  | 'trip-count-desc';
+
+export interface UIFolder {
+  id: string;
+  path: string;
+  displayName: string;
+  tripCount: number;
+  clipCount: number;
+  lastScanAt: Date;
+  health: FolderHealthStatus;
+}
+
+export { FolderHealthStatus };
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
@@ -142,8 +161,19 @@ interface AppState {
   // Import
   isImportOpen: boolean;
   importInitialDir: string | null;
+  importRescanMode: boolean;
   openImportDrawer: (dir: string) => void;
   closeImportDrawer: () => void;
+  openRescanDrawer: (folderPath: string) => void;
+
+  // Folders
+  folders: UIFolder[];
+  selectedFolderId: string | null;
+  folderSortOption: FolderSortOption;
+  setSelectedFolder: (id: string | null) => void;
+  setFolderSort: (option: FolderSortOption) => void;
+  loadFolders: () => Promise<void>;
+  runHealthChecks: () => void;
 
   // Settings
   settings: AppSettings;
@@ -292,8 +322,61 @@ export const useAppStore = create<AppState>((set, get) => ({
   // Import
   isImportOpen: false,
   importInitialDir: null,
-  openImportDrawer: (dir) => set({ isImportOpen: true, importInitialDir: dir }),
-  closeImportDrawer: () => set({ isImportOpen: false, importInitialDir: null }),
+  importRescanMode: false,
+  openImportDrawer: (dir) =>
+    set({ isImportOpen: true, importInitialDir: dir, importRescanMode: false }),
+  closeImportDrawer: () =>
+    set({ isImportOpen: false, importInitialDir: null, importRescanMode: false }),
+  openRescanDrawer: (folderPath) =>
+    set({ isImportOpen: true, importInitialDir: folderPath, importRescanMode: true }),
+
+  // Folders
+  folders: [],
+  selectedFolderId: null,
+  folderSortOption: 'health-stale-first',
+  setSelectedFolder: (id) => set({ selectedFolderId: id }),
+  setFolderSort: (option) => set({ folderSortOption: option }),
+  loadFolders: async () => {
+    const rawFolders = (await window.api.folders.list()) as ScannedFolder[];
+    const { trips } = get();
+    const uiFolders: UIFolder[] = rawFolders.map((f) => {
+      const folderTrips = trips.filter((t) => t.folderPath.startsWith(f.path));
+      return {
+        id: f.id,
+        path: f.path,
+        displayName: f.displayName,
+        tripCount: folderTrips.length,
+        clipCount: f.clipCountAtScan,
+        lastScanAt: f.lastScanAt instanceof Date ? f.lastScanAt : new Date(f.lastScanAt),
+        health: 'checking',
+      };
+    });
+    set({ folders: uiFolders });
+  },
+  runHealthChecks: () => {
+    const { folders } = get();
+    // Mark all as checking
+    set({ folders: folders.map((f) => ({ ...f, health: 'checking' as const })) });
+    // Fire concurrent health checks
+    for (const folder of folders) {
+      window.api.folders
+        .healthCheck(folder.id)
+        .then((result) => {
+          set((state) => ({
+            folders: state.folders.map((f) =>
+              f.id === result.folderId ? { ...f, health: result.status } : f,
+            ),
+          }));
+        })
+        .catch(() => {
+          set((state) => ({
+            folders: state.folders.map((f) =>
+              f.id === folder.id ? { ...f, health: 'unknown' as const } : f,
+            ),
+          }));
+        });
+    }
+  },
 
   // Settings
   settings: defaultSettings,
@@ -325,6 +408,9 @@ export const useAppStore = create<AppState>((set, get) => ({
       set({ trips, clips, settings, isLoading: false });
       // Load thumbnails in background — UI is already visible
       loadThumbnailsBackground(trips, set).catch(console.error);
+      // Load folders after trips are loaded (tripCount needs trips)
+      await get().loadFolders();
+      get().runHealthChecks();
     } catch (err) {
       set({ error: err instanceof Error ? err.message : String(err), isLoading: false });
     }
@@ -335,6 +421,8 @@ export const useAppStore = create<AppState>((set, get) => ({
       const { trips, clips, settings } = await loadData();
       set({ trips, clips, settings });
       loadThumbnailsBackground(trips, set).catch(console.error);
+      await get().loadFolders();
+      get().runHealthChecks();
     } catch (err) {
       set({ error: err instanceof Error ? err.message : String(err) });
     }

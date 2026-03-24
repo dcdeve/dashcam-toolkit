@@ -13,6 +13,7 @@ export type ImportState =
 
 export type ImportAction =
   | { type: 'SELECT_DIR'; dir: string }
+  | { type: 'RESCAN_DIR'; dir: string }
   | { type: 'DETECTED'; pattern: Pattern | null; fileCount: number }
   | { type: 'CONFIRM_SCAN' }
   | { type: 'PROGRESS'; progress: ScanProgress }
@@ -23,6 +24,8 @@ export function importReducer(state: ImportState, action: ImportAction): ImportS
   switch (action.type) {
     case 'SELECT_DIR':
       return { step: 'detecting', dir: action.dir };
+    case 'RESCAN_DIR':
+      return { step: 'confirm', dir: action.dir, pattern: null, fileCount: 0 };
     case 'DETECTED':
       if (state.step !== 'detecting') return state;
       if (action.fileCount === 0) {

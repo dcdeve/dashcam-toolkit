@@ -3,6 +3,7 @@ import { IPC } from '../shared/ipc.js';
 import type { DatabaseConfig } from '../interfaces/db.js';
 import type { ScanOptions, ScanProgress } from '../interfaces/scanner.js';
 import type { ExportOptions, ExportProgress } from '../interfaces/exporter.js';
+import type { FolderHealthResult, ScannedFolder } from '../interfaces/folders.js';
 
 const api = {
   platform: process.platform,
@@ -81,6 +82,15 @@ const api = {
     get: (clipId: string) => ipcRenderer.invoke(IPC.THUMBNAILS.GET, clipId),
     getScrub: (tripId: string) => ipcRenderer.invoke(IPC.THUMBNAILS.GET_SCRUB, tripId),
     clearCache: () => ipcRenderer.invoke(IPC.THUMBNAILS.CLEAR_CACHE),
+  },
+
+  folders: {
+    list: (): Promise<ScannedFolder[]> =>
+      ipcRenderer.invoke(IPC.FOLDERS.LIST) as Promise<ScannedFolder[]>,
+    healthCheck: (folderId: string): Promise<FolderHealthResult> =>
+      ipcRenderer.invoke(IPC.FOLDERS.HEALTH_CHECK, folderId) as Promise<FolderHealthResult>,
+    remove: (folderId: string): Promise<{ ok: true }> =>
+      ipcRenderer.invoke(IPC.FOLDERS.REMOVE, folderId) as Promise<{ ok: true }>,
   },
 };
 

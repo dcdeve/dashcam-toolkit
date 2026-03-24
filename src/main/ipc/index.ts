@@ -7,6 +7,7 @@ import { registerPatternsHandlers } from './patterns.js';
 import { registerExporterHandlers } from './exporter.js';
 import { registerThumbnailsHandlers } from './thumbnails.js';
 import { registerSettingsHandlers } from './settings.js';
+import { registerFoldersHandlers } from './folders.js';
 
 export function registerAllHandlers(): void {
   registerDialogHandlers();
@@ -18,4 +19,5 @@ export function registerAllHandlers(): void {
   registerExporterHandlers();
   registerThumbnailsHandlers();
   registerSettingsHandlers();
+  registerFoldersHandlers();
 }
