@@ -124,12 +124,8 @@ interface AppState {
   setSearchQuery: (query: string) => void;
 
   // Player
-  currentClipIndex: number;
-  isPlaying: boolean;
   currentTime: number;
   volume: number;
-  setCurrentClipIndex: (index: number) => void;
-  setIsPlaying: (playing: boolean) => void;
   setCurrentTime: (time: number) => void;
   setVolume: (volume: number) => void;
 
@@ -255,8 +251,7 @@ export const useAppStore = create<AppState>((set, get) => ({
   currentPage: 'library',
   selectedTrip: null,
   setCurrentPage: (page) => set({ currentPage: page }),
-  setSelectedTrip: (trip) =>
-    set({ selectedTrip: trip, currentClipIndex: 0, currentTime: 0, isPlaying: false }),
+  setSelectedTrip: (trip) => set({ selectedTrip: trip, currentTime: 0 }),
 
   // Library
   trips: [],
@@ -279,12 +274,8 @@ export const useAppStore = create<AppState>((set, get) => ({
   setSearchQuery: (query) => set({ searchQuery: query }),
 
   // Player
-  currentClipIndex: 0,
-  isPlaying: false,
   currentTime: 0,
   volume: 1,
-  setCurrentClipIndex: (index) => set({ currentClipIndex: index }),
-  setIsPlaying: (playing) => set({ isPlaying: playing }),
   setCurrentTime: (time) => set({ currentTime: time }),
   setVolume: (volume) => set({ volume }),
 

@@ -35,11 +35,11 @@ cli: ## Correr CLI compilado (make cli args="scan /ruta")
 
 .PHONY: test
 test: ## Correr tests
-	npx vitest run
+	ELECTRON_RUN_AS_NODE=1 npx electron ./node_modules/.bin/vitest run
 
 .PHONY: test-watch
 test-watch: ## Correr tests en watch mode
-	npx vitest
+	ELECTRON_RUN_AS_NODE=1 npx electron ./node_modules/.bin/vitest
 
 .PHONY: lint
 lint: ## Lint
@@ -63,11 +63,11 @@ typecheck: ## Verificar tipos sin emitir
 
 .PHONY: test-contracts
 test-contracts: ## Correr tests de contrato
-	npx vitest run tests/contracts/ --passWithNoTests
+	ELECTRON_RUN_AS_NODE=1 npx electron ./node_modules/.bin/vitest run tests/contracts/ --passWithNoTests
 
 .PHONY: test-e2e
 test-e2e: ## Correr tests end-to-end
-	npx vitest run tests/e2e/ --passWithNoTests
+	ELECTRON_RUN_AS_NODE=1 npx electron ./node_modules/.bin/vitest run tests/e2e/ --passWithNoTests
 
 .PHONY: check
 check: lint format-check build test ## Validacion completa
