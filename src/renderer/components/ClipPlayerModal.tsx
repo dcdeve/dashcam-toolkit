@@ -20,11 +20,17 @@ export function ClipPlayerModal({ clip, open, onClose }: ClipPlayerModalProps): 
 
   return (
     <Dialog open={open} onOpenChange={(o) => !o && onClose()}>
-      <DialogContent className="max-w-4xl p-0 overflow-hidden">
+      {/* aria-describedby={undefined} suppresses the Radix a11y description warning */}
+      <DialogContent className="max-w-4xl p-0 overflow-hidden" aria-describedby={undefined}>
         <VisuallyHidden.Root>
           <DialogTitle>{clip?.filename ?? 'Clip player'}</DialogTitle>
         </VisuallyHidden.Root>
-        {open && clip && <ClipPlayer clips={clips} volume={volume} />}
+        {/* flex flex-col gives ClipPlayer's flex-1 root a proper flex context with defined height */}
+        {open && clip && (
+          <div className="flex flex-col aspect-video w-full">
+            <ClipPlayer clips={clips} volume={volume} />
+          </div>
+        )}
       </DialogContent>
     </Dialog>
   );
