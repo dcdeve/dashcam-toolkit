@@ -8,6 +8,7 @@ import { infoAction } from './commands/info.js';
 import { patternsAction } from './commands/patterns.js';
 import { tripsAction } from './commands/trips.js';
 import { configAction } from './commands/config.js';
+import { foldersListAction, foldersHealthAction } from './commands/folders.js';
 
 const program = new Command();
 
@@ -58,5 +59,14 @@ program
   .argument('[key]', 'Setting key')
   .argument('[value]', 'Setting value')
   .action(configAction);
+
+const foldersCmd = program.command('folders').description('List and inspect scanned folders');
+
+foldersCmd.command('list').description('List all scanned folders').action(foldersListAction);
+
+foldersCmd
+  .command('health <path-or-id>')
+  .description('Run health check for a folder (by path or ID)')
+  .action(foldersHealthAction);
 
 program.parse();

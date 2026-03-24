@@ -12,17 +12,49 @@ import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { Separator } from '@/components/ui/separator';
 import { TopBar } from '@/components/TopBar';
 import { TripCard } from '@/components/TripCard';
-import { useAppStore, type SortOption, type LibraryTab } from '@/store';
+import { FolderCard } from '@/components/FolderCard';
+import { FolderDetailView } from '@/components/FolderDetailView';
+import {
+  useAppStore,
+  type SortOption,
+  type LibraryTab,
+  type FolderSortOption,
+  type UIFolder,
+} from '@/store';
 import { ClipTable } from '@/components/ClipTable';
 import { ClipGrid } from '@/components/ClipGrid';
 import { ClipPlayerModal } from '@/components/ClipPlayerModal';
 import type { Clip } from '../../interfaces/trips.js';
 import type { UIClip } from '@/store';
 
+function sortFolders(folders: UIFolder[], option: FolderSortOption): UIFolder[] {
+  const copy = [...folders];
+  switch (option) {
+    case 'health-stale-first':
+      return copy.sort((a, b) => {
+        const order = { stale: 0, unknown: 1, checking: 2, ok: 3 };
+        return (order[a.health] ?? 2) - (order[b.health] ?? 2);
+      });
+    case 'name-asc':
+      return copy.sort((a, b) => a.displayName.localeCompare(b.displayName));
+    case 'last-scanned-desc':
+      return copy.sort((a, b) => b.lastScanAt.getTime() - a.lastScanAt.getTime());
+    case 'trip-count-desc':
+      return copy.sort((a, b) => b.tripCount - a.tripCount);
+    default:
+      return copy;
+  }
+}
+
 export function Library(): React.ReactElement {
   const {
     trips,
     clips,
+    folders,
+    selectedFolderId,
+    setSelectedFolder,
+    folderSortOption,
+    setFolderSort,
     viewMode,
     setViewMode,
     activeTab,
@@ -83,6 +115,11 @@ export function Library(): React.ReactElement {
     return clips.filter((c) => c.filename.toLowerCase().includes(q));
   }, [clips, searchQuery]);
 
+  const sortedFolders = useMemo(
+    () => sortFolders(folders, folderSortOption),
+    [folders, folderSortOption],
+  );
+
   if (isLoading) {
     return (
       <div className="flex h-full items-center justify-center">
@@ -99,7 +136,53 @@ export function Library(): React.ReactElement {
     );
   }
 
-  const isEmpty = trips.length === 0 && clips.length === 0;
+  // If a folder is selected, render the detail view
+  const selectedFolder = selectedFolderId
+    ? (folders.find((f) => f.id === selectedFolderId) ?? null)
+    : null;
+
+  if (selectedFolder) {
+    return (
+      <div className="flex h-full flex-col w-full overflow-hidden">
+        <TopBar />
+        <FolderDetailView folder={selectedFolder} />
+        <ClipPlayerModal
+          clip={selectedClip}
+          open={isClipModalOpen}
+          onClose={() => setIsClipModalOpen(false)}
+        />
+      </div>
+    );
+  }
+
+  // No folders scanned yet → show empty state with scan CTA
+  if (folders.length === 0 && trips.length === 0 && clips.length === 0) {
+    return (
+      <div className="flex h-full flex-col w-full">
+        <TopBar />
+        <div className="flex flex-1 flex-col items-center justify-center gap-4 p-8">
+          <div className="flex h-24 w-24 items-center justify-center rounded-full bg-secondary">
+            <Video className="h-12 w-12 text-muted-foreground" />
+          </div>
+          <div className="text-center">
+            <h2 className="text-lg font-medium text-foreground">No footage yet</h2>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Scan a folder to import your dashcam footage
+            </p>
+          </div>
+          <Button className="mt-2 gap-2" onClick={handleScanFolder} disabled={isImportOpen}>
+            <FolderSearch className="h-4 w-4" />
+            Scan folder
+          </Button>
+        </div>
+        <ClipPlayerModal
+          clip={selectedClip}
+          open={isClipModalOpen}
+          onClose={() => setIsClipModalOpen(false)}
+        />
+      </div>
+    );
+  }
 
   return (
     <div className="flex h-full flex-col w-full">
@@ -175,53 +258,73 @@ export function Library(): React.ReactElement {
         </span>
       </div>
 
-      {/* Content */}
-      {isEmpty ? (
-        <div className="flex flex-1 flex-col items-center justify-center gap-4 p-8">
-          <div className="flex h-24 w-24 items-center justify-center rounded-full bg-secondary">
-            <Video className="h-12 w-12 text-muted-foreground" />
+      {/* Folder grid strip at top (when folders exist) */}
+      {folders.length > 0 && (
+        <div className="border-b border-border bg-card/50 px-4 py-3">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+              Folders
+            </span>
+            <Select
+              value={folderSortOption}
+              onValueChange={(v) => setFolderSort(v as FolderSortOption)}
+            >
+              <SelectTrigger className="w-44 h-7 text-xs bg-secondary border-border">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="health-stale-first">Stale first</SelectItem>
+                <SelectItem value="name-asc">Name A–Z</SelectItem>
+                <SelectItem value="last-scanned-desc">Last scanned</SelectItem>
+                <SelectItem value="trip-count-desc">Most trips</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
-          <div className="text-center">
-            <h2 className="text-lg font-medium text-foreground">No trips yet</h2>
-            <p className="mt-1 text-sm text-muted-foreground">
-              Scan a folder to import your dashcam footage
-            </p>
-          </div>
-          <Button className="mt-2 gap-2" onClick={handleScanFolder} disabled={isImportOpen}>
-            <FolderSearch className="h-4 w-4" />
-            Scan folder
-          </Button>
-        </div>
-      ) : (
-        <div className="flex-1 overflow-auto p-4">
-          {activeTab === 'trips' &&
-            (viewMode === 'grid' ? (
-              <div className="grid grid-cols-2 gap-4 lg:grid-cols-3 xl:grid-cols-4">
-                {filteredTrips.map((trip) => (
-                  <TripCard key={trip.id} trip={trip} viewMode="grid" />
-                ))}
-              </div>
-            ) : (
-              <div className="flex flex-col gap-2">
-                {filteredTrips.map((trip) => (
-                  <TripCard key={trip.id} trip={trip} viewMode="list" />
-                ))}
-              </div>
-            ))}
-
-          {activeTab === 'clips' &&
-            (viewMode === 'list' ? (
-              <ClipTable
-                clips={filteredClips as unknown as Clip[]}
-                sortField="timestampSource"
-                sortDir="desc"
-                onSort={() => {}}
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+            {sortedFolders.map((folder) => (
+              <FolderCard
+                key={folder.id}
+                folder={folder}
+                onClick={() => setSelectedFolder(folder.id)}
               />
-            ) : (
-              <ClipGrid clips={filteredClips as unknown as Clip[]} onPlay={handlePlayClip} />
             ))}
+          </div>
         </div>
       )}
+
+      {/* Content */}
+      <div className="flex-1 overflow-auto p-4">
+        {activeTab === 'trips' &&
+          (filteredTrips.length === 0 ? (
+            <div className="flex h-full items-center justify-center py-16">
+              <span className="text-sm text-muted-foreground">No trips found</span>
+            </div>
+          ) : viewMode === 'grid' ? (
+            <div className="grid grid-cols-2 gap-4 lg:grid-cols-3 xl:grid-cols-4">
+              {filteredTrips.map((trip) => (
+                <TripCard key={trip.id} trip={trip} viewMode="grid" />
+              ))}
+            </div>
+          ) : (
+            <div className="flex flex-col gap-2">
+              {filteredTrips.map((trip) => (
+                <TripCard key={trip.id} trip={trip} viewMode="list" />
+              ))}
+            </div>
+          ))}
+
+        {activeTab === 'clips' &&
+          (viewMode === 'list' ? (
+            <ClipTable
+              clips={filteredClips as unknown as Clip[]}
+              sortField="timestampSource"
+              sortDir="desc"
+              onSort={() => {}}
+            />
+          ) : (
+            <ClipGrid clips={filteredClips as unknown as Clip[]} onPlay={handlePlayClip} />
+          ))}
+      </div>
 
       <ClipPlayerModal
         clip={selectedClip}
