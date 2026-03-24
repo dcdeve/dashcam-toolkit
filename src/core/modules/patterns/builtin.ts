@@ -47,6 +47,15 @@ export const BUILTIN_PATTERNS: Pattern[] = [
     builtin: true,
   },
   {
+    id: '70mai-dash',
+    name: '70mai (dash sequence)',
+    format: "yyyyMMdd'-'HHmmss",
+    regex:
+      '^(?<type>NO|EV|PA|TL)(?<Y>\\d{4})(?<M>\\d{2})(?<D>\\d{2})-(?<h>\\d{2})(?<m>\\d{2})(?<s>\\d{2})-(?<seq>\\d+)\\.mp4$',
+    priority: 10,
+    builtin: true,
+  },
+  {
     id: 'xiaomi-mijia',
     name: 'Xiaomi Mijia',
     format: "yyyy'_'MMdd'_'HHmmss",

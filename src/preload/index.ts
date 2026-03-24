@@ -62,6 +62,10 @@ const api = {
     openFolder: (filePath: string) => ipcRenderer.invoke(IPC.EXPORTER.OPEN_FOLDER, filePath),
   },
 
+  media: {
+    getPort: (): Promise<number> => ipcRenderer.invoke('media:port'),
+  },
+
   settings: {
     getAll: (): Promise<Record<string, string>> =>
       ipcRenderer.invoke(IPC.SETTINGS.GET_ALL) as Promise<Record<string, string>>,
