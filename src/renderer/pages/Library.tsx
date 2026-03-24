@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { FolderSearch, Grid, List, Video } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
@@ -15,7 +15,9 @@ import { TripCard } from '@/components/TripCard';
 import { useAppStore, type SortOption, type LibraryTab } from '@/store';
 import { ClipTable } from '@/components/ClipTable';
 import { ClipGrid } from '@/components/ClipGrid';
+import { ClipPlayerModal } from '@/components/ClipPlayerModal';
 import type { Clip } from '../../interfaces/trips.js';
+import type { UIClip } from '@/store';
 
 export function Library(): React.ReactElement {
   const {
@@ -33,6 +35,14 @@ export function Library(): React.ReactElement {
     isImportOpen,
     openImportDrawer,
   } = useAppStore();
+
+  const [selectedClip, setSelectedClip] = useState<UIClip | null>(null);
+  const [isClipModalOpen, setIsClipModalOpen] = useState(false);
+
+  const handlePlayClip = (clip: Clip) => {
+    setSelectedClip(clip as unknown as UIClip);
+    setIsClipModalOpen(true);
+  };
 
   async function handleScanFolder(): Promise<void> {
     const dir = await window.api.dialog.openDirectory();
@@ -208,10 +218,16 @@ export function Library(): React.ReactElement {
                 onSort={() => {}}
               />
             ) : (
-              <ClipGrid clips={filteredClips as unknown as Clip[]} />
+              <ClipGrid clips={filteredClips as unknown as Clip[]} onPlay={handlePlayClip} />
             ))}
         </div>
       )}
+
+      <ClipPlayerModal
+        clip={selectedClip}
+        open={isClipModalOpen}
+        onClose={() => setIsClipModalOpen(false)}
+      />
     </div>
   );
 }
