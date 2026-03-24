@@ -97,20 +97,22 @@ export function ClipPlayer({
     // Load current clip into active buffer (skip if auto-advancing — already playing)
     if (!isAutoAdvanceRef.current && activeVideo && currentClip) {
       const src = `http://127.0.0.1:${mediaPort}/media?path=${encodeURIComponent(currentClip.path)}`;
-      console.log(`[ClipPlayer] loading clip ${currentClipIndex} into active buffer`);
-      activeVideo.src = src;
-      activeVideo.load();
+      if (activeVideo.src !== src) {
+        console.log(`[ClipPlayer] loading clip ${currentClipIndex} into active buffer`);
+        activeVideo.src = src;
+        activeVideo.load();
 
-      if (pendingSeekRef.current !== null) {
-        const seekTo = pendingSeekRef.current;
-        pendingSeekRef.current = null;
-        activeVideo.addEventListener(
-          'loadedmetadata',
-          () => {
-            activeVideo.currentTime = seekTo;
-          },
-          { once: true },
-        );
+        if (pendingSeekRef.current !== null) {
+          const seekTo = pendingSeekRef.current;
+          pendingSeekRef.current = null;
+          activeVideo.addEventListener(
+            'loadedmetadata',
+            () => {
+              activeVideo.currentTime = seekTo;
+            },
+            { once: true },
+          );
+        }
       }
 
       if (isPlaying) {
